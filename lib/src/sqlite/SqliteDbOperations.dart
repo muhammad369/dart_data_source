@@ -1,18 +1,44 @@
 
+import '../../dart_data_source.dart' as ds;
+import 'package:sqflite/sqflite.dart';
 
-import 'package:dart_data_source/dart_data_source.dart';
+class SqliteDbOperations extends ds.DbOperations{
 
-class SqliteDbOperations extends DbOperations{
+  Database _db;
+  Transaction _trns;
+
   @override
-  Future closeDb() {
-    // TODO: implement closeDb
+  Future openDb(String connectionString) async {
+    _db = await openDatabase(connectionString);
+
+  }
+
+  @override
+  Future closeDb() async {
+    if(_trns != null){
+      //_trns.
+    }
+    //
+    if(_db != null) {
+      await _db.close();
+      _db = null;
+    }
+  }
+
+  @override
+  Future rollbackTransaction() {
+    // TODO: implement rollbackTransaction
     throw UnimplementedError();
   }
 
   @override
+  void startTransaction() {
+    _db.transaction((txn) => this._trns = txn; )
+  }
+
+  @override
   Future commitTransaction() {
-    // TODO: implement commitTransaction
-    throw UnimplementedError();
+    
   }
 
   @override
@@ -40,26 +66,9 @@ class SqliteDbOperations extends DbOperations{
   }
 
   @override
-  Future openDb(String connectionString) {
-    // TODO: implement openDb
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<Map>> query(String sql, [List<Object> params]) {
     // TODO: implement query
     throw UnimplementedError();
-  }
-
-  @override
-  Future rollbackTransaction() {
-    // TODO: implement rollbackTransaction
-    throw UnimplementedError();
-  }
-
-  @override
-  void startTransaction() {
-    // TODO: implement startTransaction
   }
 
   @override
