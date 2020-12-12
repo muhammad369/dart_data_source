@@ -98,7 +98,7 @@ abstract class Database {
         .select()
         .from(_tbl_meta)
         .fields([_meta_value])
-        .where(_meta_name.equal("schema version"))
+        .where(_meta_name.Equal("schema version"))
         .executeScalar();
     //
     return tmp == null ? -1 : tmp as int;
@@ -121,7 +121,7 @@ abstract class Database {
     this
         .Update(_tbl_meta)
         .Set([_meta_value.value(version)])
-        .Where(_meta_name.equal("schema version"))
+        .Where(_meta_name.Equal("schema version"))
         .execute();
   }
 

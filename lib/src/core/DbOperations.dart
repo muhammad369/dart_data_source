@@ -2,6 +2,7 @@ import 'dart:core';
 
 /// the abstract operation to be implemented by every db type
 abstract class DbOperations {
+
   Future openDb(String connectionString);
 
   Future closeDb();

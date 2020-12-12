@@ -11,25 +11,25 @@ abstract class Expr {
   String toSql(Statement st);
 
   //#region methods binary
-  Expr equal(Object o) {
+  Expr Equal(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "=", o)..fieldType = dbType.Bool;
     }
-    return equal(new ValueExpr(o)..fieldType = dbType.Bool);
+    return Equal(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr notEqual(Object o) {
+  Expr NotEqual(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "<>", o)..fieldType = dbType.Bool;
     }
-    return notEqual(new ValueExpr(o)..fieldType = dbType.Bool);
+    return NotEqual(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr concat(Object o) {
+  Expr Concat(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "||", o)..fieldType = dbType.String;
     }
-    return concat(new ValueExpr(o)..fieldType = dbType.String);
+    return Concat(new ValueExpr(o)..fieldType = dbType.String);
   }
 
   Expr minus(Object o) {
@@ -154,11 +154,11 @@ abstract class Expr {
   /// matches against a pattern, use % to match any number of chars or digits(or none),
   /// and _ to match one, you can use it with text or numeric columns
   /// </summary>
-  Expr like(String pattern) {
+  Expr Like(String pattern) {
     return new BinaryExpression(this, "LIKE", new ValueExpr(pattern));
   }
 
-  Expr notLIKE(String pattern) {
+  Expr NotLIKE(String pattern) {
     return new BinaryExpression(this, "NOT LIKE", new ValueExpr(pattern));
   }
 
@@ -166,7 +166,7 @@ abstract class Expr {
 
   //#region static methods - unary
 
-  static Expr exists(AbsSelect select) {
+  static Expr Exists(AbsSelect select) {
     return new ExistsExpression(select);
   }
 
@@ -174,26 +174,26 @@ abstract class Expr {
     return new UnaryExpression("-", exp)..fieldType = dbType.Double;
   }
 
-  static Expr not(Expr exp) {
+  static Expr Not(Expr exp) {
     return new UnaryExpression("NOT", exp)..fieldType = dbType.Bool;
   }
 
-  static Expr abs(Expr exp) {
+  static Expr Abs(Expr exp) {
     return new FunctionExpression("Abs", [exp])..fieldType = exp.fieldType;
   }
 
-  static Expr ceiling(Expr exp) {
+  static Expr Ceiling(Expr exp) {
     return new FunctionExpression("ceiling", [exp])..fieldType = dbType.Int;
   }
 
-  static Expr floor(Expr exp) {
+  static Expr Floor(Expr exp) {
     return new FunctionExpression("floor", [exp])..fieldType = dbType.Int;
   }
 
   /// <summary>
   /// the length of a String value
   /// </summary>
-  static Expr length(Expr exp) {
+  static Expr Length(Expr exp) {
     return new FunctionExpression("length", [exp])..fieldType = dbType.Int;
   }
 
@@ -215,15 +215,15 @@ abstract class Expr {
     return new FunctionExpression("avg", exp)..fieldType = exp[0].fieldType;
   }
 
-  static Expr count(List<Expr> exp) {
+  static Expr Count(List<Expr> exp) {
     return new FunctionExpression("count", exp)..fieldType = dbType.Int;
   }
 
-  static Expr median(List<Expr> exp) {
+  static Expr Median(List<Expr> exp) {
     return new FunctionExpression("median", exp)..fieldType = exp[0].fieldType;
   }
 
-  static Expr sum(List<Expr> exp) {
+  static Expr Sum(List<Expr> exp) {
     return new FunctionExpression("sum", exp)..fieldType = exp[0].fieldType;
   }
 
