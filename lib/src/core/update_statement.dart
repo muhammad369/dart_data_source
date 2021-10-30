@@ -1,11 +1,11 @@
 import '../../dart_data_source.dart';
 
 class UpdateStatement extends NonQueryStatement {
-  List<Assignment> assigns;
-  Expr cond;
+  late List<Assignment> assigns;
+  Expr? cond;
 
-  UpdateStatement(Database db, Table tbl) {
-    this.db = db;
+  UpdateStatement(DbContext dbc, Table tbl) {
+    this.dbc = dbc;
     this.tbl = tbl;
   }
 
@@ -30,13 +30,13 @@ class UpdateStatement extends NonQueryStatement {
 
     //
     if (cond != null) {
-      sb.write(" WHERE (${cond.toSql(this)}) ");
+      sb.write(" WHERE (${cond!.toSql(this)}) ");
     }
     return sb.toString();
   }
 
   @override
-  Future<int> execute() {
-    return db.executeUpdate(this);
+  Future<int> execute([DbContext? dbc]) {
+    return (dbc ?? this.dbc).executeUpdate(this);
   }
 }

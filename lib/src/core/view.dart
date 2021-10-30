@@ -3,21 +3,21 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 class View extends DbTable {
-  AbsSelect select;
+  late AbsSelect _select;
 
-  AbsSelect get selectStmnt {
-    return selectStmnt;
+  AbsSelect get selectStatement {
+    return _select;
   }
 
   @override
   List<FieldInfo> get fieldsInfo {
-    return select.fieldsInfo;
+    return _select.fieldsInfo;
   }
 
   View(Database db, String name, AbsSelect select) {
     this.db = db;
     this.name = name;
-    this.select = select;
+    this._select = select;
   }
 
   @override
@@ -28,6 +28,6 @@ class View extends DbTable {
   @override
   String createCommand() {
     return "CREATE VIEW `{0}` AS  {1}"
-        .format([this.name, this.select.sqlInSelect()]);
+        .format([this.name, this._select.sqlInSelect()]);
   }
 }

@@ -13,15 +13,15 @@ extension StringBufferExt on String {
 }
 
 extension DatetimeExt on DateTime {
-  String date() {
+  String dateString() {
     return "${this.year}-${this.month}-${this.day}";
   }
 
-  String time() {
+  String timeString() {
     return "${this.hour}:${this.minute}:${this.second}";
   }
 
-  String dateTime() {
+  String dateTimeString() {
     return "${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}:${this.second}";
   }
 }

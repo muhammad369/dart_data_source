@@ -5,10 +5,10 @@ import '../../dart_data_source.dart';
 enum select_comp_op { union, unionAll, intersect, except }
 
 class CompoundSelect extends AbsSelect {
-  AbsSelect select1, select2;
-  select_comp_op op;
+  late AbsSelect select1, select2;
+  late select_comp_op op;
 
-  static List<String> ops = new List<String>()
+  static List<String> ops = <String>[]
     ..addAll(["UNION", "UNION ALL", "INTERSECT", "EXCEPT"]);
 
   CompoundSelect(select_comp_op op, AbsSelect select1, AbsSelect select2) {
@@ -23,10 +23,12 @@ class CompoundSelect extends AbsSelect {
   }
 
   @override
-  Future<List<Map>> execute() {}
+  Future<List<Map>> execute(){
+    throw Exception('Not Implemented');
+  }
 
   @override
   List<FieldInfo> get fieldsInfo {
-    return select1.fieldsInfo;
+    return [...select1.fieldsInfo, ...select2.fieldsInfo];
   }
 }

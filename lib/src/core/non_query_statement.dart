@@ -1,17 +1,17 @@
 import '../../dart_data_source.dart';
 
 abstract class NonQueryStatement extends Statement {
-//must be initialized
-  Database db = null;
-  Table tbl = null;
 
-  Future<int> execute();
+  late DbContext dbc;
+  late Table tbl;
+
+  Future<int> execute([DbContext? dbc]);
 
   String toSql();
 
 //#region Statement interface
 
-  List<NameValuePair> parameters = new List<NameValuePair>();
+  List<NameValuePair> parameters = <NameValuePair>[];
 
   @override
   void addParam(String name, Object value) {

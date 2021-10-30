@@ -1,10 +1,10 @@
 import '../../dart_data_source.dart';
 
 class DeleteStatement extends NonQueryStatement {
-  Expr cond;
+  Expr? cond;
 
-  DeleteStatement(Database db, Table tbl) {
-    this.db = db;
+  DeleteStatement(DbContext dbc, Table tbl) {
+    this.dbc = dbc;
     this.tbl = tbl;
   }
 
@@ -14,8 +14,8 @@ class DeleteStatement extends NonQueryStatement {
   }
 
   @override
-  Future<int> execute() {
-    return db.executeDelete(this);
+  Future<int> execute([DbContext? dbc]) {
+    return (dbc ?? this.dbc).executeDelete(this);
   }
 
   @override
@@ -23,7 +23,7 @@ class DeleteStatement extends NonQueryStatement {
     StringBuffer sb = new StringBuffer();
     sb.write("DELETE FROM `${tbl.name}`");
     if (cond != null) {
-      sb.write(" WHERE (${cond.toSql(this)})");
+      sb.write(" WHERE (${cond!.toSql(this)})");
     }
     return sb.toString();
   }

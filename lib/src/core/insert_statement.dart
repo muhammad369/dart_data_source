@@ -1,10 +1,10 @@
 import '../../dart_data_source.dart';
 
 class InsertStatement extends NonQueryStatement {
-  List<Assignment> assigns;
+  late List<Assignment> assigns;
 
-  InsertStatement(Database db, Table tbl) {
-    this.db = db;
+  InsertStatement(DbContext dbc, Table tbl) {
+    this.dbc = dbc;
     this.tbl = tbl;
   }
 
@@ -36,15 +36,15 @@ class InsertStatement extends NonQueryStatement {
 
 
   @override
-  Future<int> execute() {
-    return db.executeInsert(this);
+  Future<int> execute([DbContext? dbc]) {
+    return (dbc ?? this.dbc).executeInsert(this);
   }
   
 }
 
 class Assignment {
-  Column cln;
-  Expr val;
+  late Column cln;
+  late Expr val;
 
   Assignment(Column cln, Expr value) {
     this.cln = cln;

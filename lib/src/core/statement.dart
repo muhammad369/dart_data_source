@@ -6,19 +6,19 @@ abstract class Statement {
 }
 
 class NameValuePair {
-  Object Val;
-  String Name;
+  late Object _value;
+  late String _name;
 
   NameValuePair(String name, Object val) {
-    this.Name = name;
-    this.Val = val;
+    this._name = name;
+    this._value = val;
   }
 
-  Object value() {
-    return this.Val;
+  Object get value {
+    return this._value;
   }
 
-  String name() {
-    return "@${Name}";
+  String get name {
+    return "@${_name}";
   }
 }

@@ -1,15 +1,15 @@
 import '../../dart_data_source.dart';
 
 class Trigger extends DbObject {
-  static List<String> events = new List<String>()
+  static List<String> events = <String>[]
     ..addAll(["INSERT", "UPDATE", "DELETE"]);
 //
-  String name;
+  late String name;
   bool before = false; //befor or after
-  Table tbl;
-  dbEvent _event;
-  List<NonQueryStatement> triggerSteps;
-  Expr when;
+  late Table tbl;
+  late dbEvent _event;
+  late List<NonQueryStatement> triggerSteps;
+  late Expr when;
 
   Trigger(String name, Table tbl) {
     this.name = name;

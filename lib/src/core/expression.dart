@@ -8,28 +8,28 @@ abstract class Expr {
     return new AliasedExpr(this, alias);
   }
 
-  String toSql(Statement st);
+  String toSql(Statement? st);
 
   //#region methods binary
-  Expr Equal(Object o) {
+  Expr equal(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "=", o)..fieldType = dbType.Bool;
     }
-    return Equal(new ValueExpr(o)..fieldType = dbType.Bool);
+    return equal(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr NotEqual(Object o) {
+  Expr notEqual(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "<>", o)..fieldType = dbType.Bool;
     }
-    return NotEqual(new ValueExpr(o)..fieldType = dbType.Bool);
+    return notEqual(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr Concat(Object o) {
+  Expr concat(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "||", o)..fieldType = dbType.String;
     }
-    return Concat(new ValueExpr(o)..fieldType = dbType.String);
+    return concat(new ValueExpr(o)..fieldType = dbType.String);
   }
 
   Expr minus(Object o) {
@@ -71,7 +71,7 @@ abstract class Expr {
     return divide(new ValueExpr(o)..fieldType = dbType.Double);
   }
 
-  Expr And(Expr exp) {
+  Expr AND(Expr exp) {
     return new BinaryExpression(this, "AND", exp)..fieldType = dbType.Bool;
   }
 
@@ -95,11 +95,11 @@ abstract class Expr {
     return new BinaryExpression(this, "<=", exp)..fieldType = dbType.Bool;
   }
 
-  Expr inValues(List<Object> values) {
+  Expr InValues(List<Object> values) {
     return new InExpression(this, true, values)..fieldType = dbType.Bool;
   }
 
-  Expr notInValues(List<Object> values) {
+  Expr NotInValues(List<Object> values) {
     return new InExpression(this, false, values)..fieldType = dbType.Bool;
   }
 
@@ -107,7 +107,7 @@ abstract class Expr {
     return new InExpression.Select(this, true, select)..fieldType = dbType.Bool;
   }
 
-  Expr notIN(AbsSelect select) {
+  Expr NotIN(AbsSelect select) {
     return new InExpression.Select(this, false, select)
       ..fieldType = dbType.Bool;
   }
@@ -158,7 +158,7 @@ abstract class Expr {
     return new BinaryExpression(this, "LIKE", new ValueExpr(pattern));
   }
 
-  Expr NotLIKE(String pattern) {
+  Expr NotLike(String pattern) {
     return new BinaryExpression(this, "NOT LIKE", new ValueExpr(pattern));
   }
 
@@ -247,61 +247,53 @@ class BinaryExpression extends Expr {
   Expr _exp2;
   String _op;
 
-  BinaryExpression(Expr exp1, String op, Expr exp2) {
-    this._exp1 = exp1;
-    this._exp2 = exp2;
-    this._op = op;
-  }
+  BinaryExpression(this._exp1, this._op, this._exp2);
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "({0} {1} {2}) ".format([_exp1.toSql(st), _op, _exp2.toSql(st)]);
   }
 }
 
 class UnaryExpression extends Expr {
   Expr _exp;
-
   String _op;
 
-  UnaryExpression(String op, Expr exp) {
-    this._exp = exp;
-    this._op = op;
-  }
+  UnaryExpression(this._op, this._exp);
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "({0} {1}) ".format([_op, _exp.toSql(st)]);
   }
 }
 
 class FunctionExpression extends Expr {
-  List<Expr> _exp_list;
+  List<Expr>? _exp_list;
   String _function;
 
-  FunctionExpression(String function, List<Expr> exps) {
-    this._exp_list = exps;
-    this._function = function;
-  }
+  FunctionExpression(this._function, [this._exp_list]);
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     StringBuffer sb = new StringBuffer();
     sb.write(_function);
     sb.write("( ");
-    for (Expr exp in _exp_list) {
+    //
+    if(_exp_list == null || _exp_list!.length == 0)
+      return sb.toString() + ") ";
+    //
+    for (Expr exp in _exp_list!) {
       sb.write("${exp.toSql(st)}${" ,"}");
     }
-
     return sb.toString().removeLastChar() + ") ";
   }
 }
 
 class BetweenExpression extends Expr {
-  Expr _exp1;
-  Expr _exp2;
-  bool _between;
-  Expr _exp;
+  late Expr _exp1;
+  late Expr _exp2;
+  late bool _between;
+  late Expr _exp;
 
   BetweenExpression(Expr exp, bool betweenOrNot, Expr exp1, Expr exp2) {
     this._exp = exp;
@@ -311,7 +303,7 @@ class BetweenExpression extends Expr {
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "(({0}) {1} ({2}) AND ({3})) ".format([
       _exp.toSql(st),
       _between ? "BETWEEN" : "NOT BETWEEN",
@@ -322,8 +314,8 @@ class BetweenExpression extends Expr {
 }
 
 class NullCheckExp extends Expr {
-  bool _isNull;
-  Expr _exp;
+  late bool _isNull;
+  late Expr _exp;
 
   NullCheckExp(Expr exp, bool isNull) {
     this._exp = exp;
@@ -331,28 +323,28 @@ class NullCheckExp extends Expr {
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "({0}) {1}"
         .format([_exp.toSql(st), _isNull ? "ISNULL" : "NOTNULL"]);
   }
 }
 
 class ExistsExpression extends Expr {
-  AbsSelect select;
+  late AbsSelect select;
 
   ExistsExpression(AbsSelect select) {
     this.select = select;
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "EXISTS (${select.sqlInSelect()})";
   }
 }
 
 class ValueExpr extends Expr {
-  Object val = null;
-  String name = null;
+  Object? val = null;
+  String? name = null;
 
   ValueExpr(Object val) {
     this.val = val;
@@ -370,9 +362,9 @@ class ValueExpr extends Expr {
   /// you may pass null
   /// </summary>
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     if (name != null && st != null) {
-      st.addParam(name, val);
+      st.addParam(name!, val!);
       return "?";
       //return "@${name}";
     }
@@ -389,14 +381,14 @@ class ValueExpr extends Expr {
 }
 
 class InExpression extends Expr {
-  List<Object> values;
-  AbsSelect select;
-  DbTable table;
+  late AbsSelect select;
+  List<Object>? values;
+  DbTable? table;
 //
-  bool _inOrNotIn;
-  Expr _exp;
+  late bool _inOrNotIn;
+  late Expr _exp;
 
-  String valueInSql(Object val) {
+  String valueInSql(Object? val) {
     if (val == null) {
       return "NULL";
     } else if (val is String) {
@@ -426,13 +418,13 @@ class InExpression extends Expr {
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     if (values != null) {
       StringBuffer sb = new StringBuffer();
       sb.write(_exp.toSql(st));
       if (!_inOrNotIn) sb.write(" NOT ");
       sb.write("BETWEEN ( ");
-      for (Object val in values) {
+      for (Object val in values!) {
         sb.write("(${valueInSql(val)})${' ,'}");
       }
 
@@ -440,14 +432,14 @@ class InExpression extends Expr {
     }
     //======
     if (table != null) {
-      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${table.sqlInSelect()})";
+      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${table!.sqlInSelect()})";
     }
     //======
     if (select != null) {
       return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${select.sqlInSelect()})";
     }
     //not supposed to come here
-    return null;
+    return '';
   }
 }
 
@@ -456,8 +448,8 @@ class InExpression extends Expr {
 /// persist an alias, no problem with other exprs as it will be used once
 /// </summary>
 class AliasedExpr extends Expr {
-  String _alias;
-  Expr exp;
+  late String _alias;
+  late Expr exp;
 
   String get alias {
     return _alias;
@@ -470,7 +462,7 @@ class AliasedExpr extends Expr {
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return "({0}) AS {1}".format([exp.toSql(st), _alias]);
   }
 }
@@ -478,8 +470,8 @@ class AliasedExpr extends Expr {
 //#endregion
 
 class FieldInfo {
-  String name;
-  dbType type;
+  late String name;
+  late dbType type;
 
   FieldInfo(dbType type, String name) {
     this.name = name;

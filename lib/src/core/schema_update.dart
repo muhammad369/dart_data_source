@@ -1,27 +1,27 @@
 import '../../dart_data_source.dart';
 
 class SchemaUpdate {
-  List<DbObject> objects = new List<DbObject>();
+  late List<DbObject> objects ;
 
-  List<NonQueryStatement> statements = new List<NonQueryStatement>();
+  List<NonQueryStatement> statements = <NonQueryStatement>[];
 
   //constructor
   //SchemaUpdate() { }
 
-  SchemaUpdate(List<DbObject> dbo) {
-    addObjects(dbo);
+  SchemaUpdate(List<DbObject> dbos) {
+    this.objects = dbos;
   }
 
   /// <summary>
   /// executes to the database without commiting
   /// </summary>
-  void apply(Database db) {
+  Future<void> apply(DbContext dbc) async {
     for (DbObject dbo in objects) {
-      db.create(dbo);
+      await dbc.create(dbo);
     }
     //
     for (NonQueryStatement st in statements) {
-      st.execute();
+      await st.execute();
     }
   }
 
@@ -29,7 +29,6 @@ class SchemaUpdate {
     for (DbObject item in dbo) {
       objects.add(item);
     }
-
     return this;
   }
 
@@ -37,7 +36,6 @@ class SchemaUpdate {
     for (NonQueryStatement item in st) {
       statements.add(item);
     }
-
     return this;
   }
 }

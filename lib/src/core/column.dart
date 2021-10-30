@@ -2,34 +2,35 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 abstract class Column extends Expr implements DbObject {
-  Table table;
-  String name;
-  String displayName;
+  late Table table;
+  late String name;
+  late String type;
+  String? displayName;
 
-  Column(String name, [String display_name]) {
+  Column(String name, [String? displayName]) {
     this.name = name;
-    if (displayName != null) this.displayName = display_name;
+    if (displayName != null) this.displayName = displayName;
   }
 
-  Column setDisplayName(String display_name) {
-    this.displayName = display_name;
+  Column setDisplayName(String displayName) {
+    this.displayName = displayName;
     return this;
   }
 
   /// <summary>
   /// must be expr to be assigned to Value
   /// </summary>
-  ValueExpr defaultValue;
+  ValueExpr? defaultValue;
 
-  bool Nullable = false;
+  bool nullable = false;
   bool unique = false;
 
   Column allowNull() {
-    this.Nullable = true;
+    this.nullable = true;
     return this;
   }
 
-  Column Unique() {
+  Column isUnique() {
     this.unique = true;
     return this;
   }
@@ -45,7 +46,7 @@ abstract class Column extends Expr implements DbObject {
   }
 
 //
-  String type;
+
 
   String Type() {
     return type;
@@ -59,9 +60,9 @@ abstract class Column extends Expr implements DbObject {
     return "`{0}` {1} {2} {3} {4}".format([
       name,
       Type(),
-      Nullable ? "" : "NOT NULL",
+      nullable ? "" : "NOT NULL",
       unique ? "UNIQUE" : "",
-      defaultValue == null ? "" : "DEFAULT " + defaultValue.toSql(null)
+      defaultValue == null ? "" : "DEFAULT " + defaultValue!.toSql(null)
     ]);
   }
 
@@ -113,7 +114,7 @@ abstract class Column extends Expr implements DbObject {
   }
 
   @override
-  String toSql(Statement st) {
+  String toSql(Statement? st) {
     return this.name;
   }
 }
@@ -166,7 +167,7 @@ abstract class TextColumn extends Column {
 }
 
 abstract class StringColumn extends Column {
-  int _maxLength;
+  late int _maxLength;
 
   StringColumn(String name, int max) : super(name) {
     fieldType = dbType.String;
@@ -194,7 +195,7 @@ abstract class DateColumn extends Column {
   }
 
   Assignment value(DateTime v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v.date()));
+    return new Assignment(this, new ValueExpr.Name(this.name, v.dateString()));
   }
 }
 
@@ -204,7 +205,7 @@ abstract class DateTimeColumn extends Column {
   }
 
   Assignment value(DateTime v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v.dateTime()));
+    return new Assignment(this, new ValueExpr.Name(this.name, v.dateTimeString()));
   }
 }
 

@@ -3,20 +3,20 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 class Table extends DbTable {
-  List<Column> fields;
-  List<ForeinKey> FKs;
+  late List<Column> fields;
+  late List<ForeinKey> FKs;
 
   Table.Empty() {
-    this.fields = new List<Column>();
-    this.FKs = new List<ForeinKey>();
+    this.fields = <Column>[];
+    this.FKs = <ForeinKey>[];
   }
 
   IntColumn get id {
     return fields[0] as IntColumn;
   }
 
-  int newId(Database db) {
-    Object tmp = db
+  int newId(DbContext dbc) {
+    Object? tmp = dbc
         .select()
         .fields([
           Expr.Max([this.id])
@@ -77,7 +77,7 @@ class Table extends DbTable {
 
   @override
   List<FieldInfo> get fieldsInfo {
-    var tmp = new List<FieldInfo>();
+    var tmp = <FieldInfo>[];
 
     for (var item in fields) {
       tmp.add(new FieldInfo(item.fieldType, item.name));
@@ -87,8 +87,8 @@ class Table extends DbTable {
 }
 
 class ForeinKey {
-  Column coln;
-  Table tbl;
+  late Column coln;
+  late Table tbl;
 
   ForeinKey(Column coln, Table tbl) {
     this.coln = coln;

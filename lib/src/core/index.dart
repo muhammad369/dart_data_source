@@ -1,15 +1,16 @@
 import '../../dart_data_source.dart';
 
 class Index extends DbObject {
-  Table tbl;
-  List<Column> cols;
-  bool _unique;
-  String name;
+  late Table tbl;
+  late List<Column> cols;
+  late bool _unique;
+  late String name;
 
   Index(String name, Table tbl, List<Column> cols) {
     this.name = name;
     this.tbl = tbl;
     this.cols = cols;
+    this._unique = false;
   }
 
   Index unique() {

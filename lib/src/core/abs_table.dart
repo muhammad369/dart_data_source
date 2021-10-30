@@ -32,15 +32,15 @@ abstract class AbsTable {
 
   //#endregion
 
-  List<FieldInfo> fieldsInfo;
+  late List<FieldInfo> fieldsInfo;
 }
 
 /// <summary>
 /// a table or a view in the database
 /// </summary>
 abstract class DbTable extends AbsTable implements DbObject {
-  String name;
-  Database db;
+  late String name;
+  late Database db;
 
   @override
   String sqlInSelect() {
