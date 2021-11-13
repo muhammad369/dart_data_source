@@ -66,7 +66,7 @@ class SqliteDbContext extends DbContext{
 
   @override
   Future<void> executeTransaction(Future<void> Function(DbContext transactionContext) action) {
-    if(_db != sqf.Database)
+    if(_db is sqf.Transaction)
       throw Exception("executeTransaction() method can't be called on a TransactionContext instance");
     //
     return (_db as sqf.Database).transaction((txn) {
@@ -82,7 +82,7 @@ class SqliteDbContext extends DbContext{
     {
       _selectLastIdStatement = this.select().fields([new FunctionExpression("last_insert_rowid")]);
     }
-    var value = await _selectLastIdStatement!.executeScalar();
+    var value = _selectLastIdStatement!.executeScalar();
     if(value == null) return 0;
     return value is int? value : int.parse(value.toString());
   }

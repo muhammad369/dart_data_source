@@ -43,13 +43,7 @@ abstract class Column extends Expr implements DbObject {
   }
 
   String columnDefinition() {
-    return "`{0}` {1} {2} {3} {4}".format([
-      name,
-      getType(),
-      allowNull ? "" : "NOT NULL",
-      unique ? "UNIQUE" : "",
-      defaultValue == null ? "" : "DEFAULT " + defaultValue!.toSql(null)
-    ]);
+    return '`${name}` ${getType()} ${allowNull ? "" : "NOT NULL"} ${unique ? "UNIQUE" : ""} ${defaultValue == null ? "" : "DEFAULT " + defaultValue!.toSql(null)}';
   }
 
 //#region functions
@@ -90,7 +84,7 @@ abstract class Column extends Expr implements DbObject {
 //#endregion
 
   String createCommand() {
-    return "ALTER TABLE `{0}` ADD COLUMN {1}".format([table.name, columnDefinition()]);
+    return "ALTER TABLE `${table.name}` ADD COLUMN ${columnDefinition()}";
   }
 
   @override

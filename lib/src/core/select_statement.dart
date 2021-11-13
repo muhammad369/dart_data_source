@@ -84,7 +84,7 @@ class SelectStatement extends AbsSelect implements Statement {
   @override
   String sqlInSelect() {
     StringBuffer sb = new StringBuffer();
-    sb.write("SELECT {0}".format([distinct ? "DISTINCT" : ""]));
+    sb.write('SELECT ${distinct ? "DISTINCT" : ""}');
     //select all
     if (tableFields == null && selectFields == null) sb.write(" * ");
     //table fields
@@ -132,7 +132,7 @@ class SelectStatement extends AbsSelect implements Statement {
     //page
     if (pageSize > 0) {
       sb.write(
-          " LIMIT {0} OFFSET {1}".format([pageSize, pageSize * pageIndex]));
+          " LIMIT ${pageSize} OFFSET ${pageSize * pageIndex}");
     }
     //
     return sb.toString();
@@ -216,7 +216,6 @@ class SortExp {
   }
 
   String toSql() {
-    return " ({0}) {1} "
-        .format([exp.toSql(null), so == SortOrder.ASC ? "ASC" : "DESC"]);
+    return ' (${exp.toSql(null)}) ${so == SortOrder.ASC ? "ASC" : "DESC"} ';
   }
 }

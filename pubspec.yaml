@@ -1,5 +1,5 @@
 name: dart_data_source
-description: A new Flutter package.
+description: A layer on top of Sqflite
 version: 0.0.1
 author:
 homepage:
@@ -11,11 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sqflite: ^2.0.0+4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  sqflite: ^2.0.0+4
+
 
 
 # For information on the generic Dart part of this file, see the

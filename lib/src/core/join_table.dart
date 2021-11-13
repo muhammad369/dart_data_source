@@ -12,12 +12,7 @@ class JoinTable extends AbsTable {
 
   @override
   String sqlInSelect() {
-    return "({0}) {1} JOIN ({2}) ON ({3})".format([
-      tbl1.sqlInSelect(),
-      joinNames[join.index],
-      tbl2.sqlInSelect(),
-      on.toSql(null)
-    ]);
+    return "(${tbl1.sqlInSelect()}) ${joinNames[join.index]} JOIN (${tbl2.sqlInSelect()}) ON (${on.toSql(null)})";
   }
 
   JoinTable(AbsTable t1, JoinType j, AbsTable t2, Expr on) {

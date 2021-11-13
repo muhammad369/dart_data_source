@@ -35,12 +35,7 @@ class Trigger extends DbObject {
 
   String createCommand() {
     StringBuffer sb = new StringBuffer();
-    sb.write("CREATE TRIGGER `{0}` {1} {2} ON `{3}`".format([
-      this.name,
-      before ? "BEFORE" : "AFTER",
-      events[_event.index],
-      tbl.name
-    ]));
+    sb.write('CREATE TRIGGER `${this.name}` ${before ? "BEFORE" : "AFTER"} ${events[_event.index]} ON `${tbl.name}`');
     sb.write(" FOR EACH ROW ");
     sb.write(" WHEN (${when.toSql(null)}) BEGIN");
 

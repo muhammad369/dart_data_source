@@ -27,7 +27,6 @@ class View extends DbTable {
 
   @override
   String createCommand() {
-    return "CREATE VIEW `{0}` AS  {1}"
-        .format([this.name, this._select.sqlInSelect()]);
+    return "CREATE VIEW `${this.name}` AS  ${this._select.sqlInSelect()}";
   }
 }

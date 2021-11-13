@@ -251,7 +251,7 @@ class BinaryExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "({0} {1} {2}) ".format([_exp1.toSql(st), _op, _exp2.toSql(st)]);
+    return "(${_exp1.toSql(st)} ${_op} ${_exp2.toSql(st)}) ";
   }
 }
 
@@ -263,7 +263,7 @@ class UnaryExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "({0} {1}) ".format([_op, _exp.toSql(st)]);
+    return "(${_op} ${_exp.toSql(st)}) ";
   }
 }
 
@@ -304,12 +304,7 @@ class BetweenExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "(({0}) {1} ({2}) AND ({3})) ".format([
-      _exp.toSql(st),
-      _between ? "BETWEEN" : "NOT BETWEEN",
-      _exp1.toSql(st),
-      _exp2.toSql(st)
-    ]);
+    return '((${_exp.toSql(st)}) ${_between ? "BETWEEN" : "NOT BETWEEN"} (${_exp1.toSql(st)}) AND (${_exp2.toSql(st)})) ';
   }
 }
 
@@ -324,8 +319,7 @@ class NullCheckExp extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "({0}) {1}"
-        .format([_exp.toSql(st), _isNull ? "ISNULL" : "NOTNULL"]);
+    return "(${_exp.toSql(st)}) ${_isNull ? "ISNULL" : "NOTNULL"}";
   }
 }
 
@@ -463,7 +457,7 @@ class AliasedExpr extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "({0}) AS {1}".format([exp.toSql(st), _alias]);
+    return "(${exp.toSql(st)}) AS ${_alias}";
   }
 }
 

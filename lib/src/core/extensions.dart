@@ -3,13 +3,7 @@ extension StringBufferExt on String {
     return this.substring(0, this.length - 1);
   }
 
-  String format(List<Object> values){
-    String tmp = this;
-    for(int i=0; i < values.length; i++){
-      tmp = tmp.replaceAll("{${i}}", values[i].toString());
-    }
-    return this;
-  }
+
 }
 
 extension DatetimeExt on DateTime {

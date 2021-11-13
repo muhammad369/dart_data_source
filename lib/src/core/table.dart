@@ -64,8 +64,7 @@ class Table extends DbTable {
     }
     //forein keys
     for (ForeinKey fk in this.FKs) {
-      sb.write("FOREIGN KEY (`{0}`) REFERENCES `{1}` ON DELETE CASCADE,"
-          .format([fk.coln.name, fk.tbl.name]));
+      sb.write("FOREIGN KEY (`${fk.coln.name}`) REFERENCES `${fk.tbl.name}` ON DELETE CASCADE,");
     }
     //primary key
     sb.write("PRIMARY KEY (`${this.fields[0].name}`)");

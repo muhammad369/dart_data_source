@@ -17,10 +17,10 @@ class InsertStatement extends NonQueryStatement {
   @override
   String toSql() {
     StringBuffer sb = new StringBuffer();
-    sb.write("INSERT INTO `{0}` ( ".format([tbl.name]));
+    sb.write("INSERT INTO `${tbl.name}` ( ");
     //fields
     for (Assignment asn in assigns) {
-      sb.write("`{0}` ,".format([asn.cln.name]));
+      sb.write("`${asn.cln.name}` ,");
     }
     var sbt = sb.toString().removeLastChar();
     sb.clear();
@@ -28,7 +28,7 @@ class InsertStatement extends NonQueryStatement {
     sb.write(") VALUES (");
     //values
     for (Assignment asn in assigns) {
-      sb.write("{0} ,".format([asn.val.toSql(this)]));
+      sb.write("${asn.val.toSql(this)} ,");
     }
 
     return sb.toString().removeLastChar() + ")";
@@ -52,6 +52,6 @@ class Assignment {
   }
 
   String toSql(Statement st) {
-    return "`{0}` = ({1})".format([cln.name, val.toSql(st)]);
+    return "`${cln.name}` = (${val.toSql(st)})";
   }
 }
