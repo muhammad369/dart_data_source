@@ -36,21 +36,21 @@ abstract class Database {
 
   //#region db-columns
 
-  IntColumn intColumn(String name);
+  IntColumn intColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  DoubleColumn doubleColumn(String name);
+  DoubleColumn doubleColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  TextColumn textColumn(String name);
+  TextColumn textColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  StringColumn stringColumn(String name, int maxLength);
+  StringColumn stringColumn(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  DateColumn dateColumn(String name);
+  DateColumn dateColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  DateTimeColumn dateTimeColumn(String name);
+  DateTimeColumn dateTimeColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
   //BinaryColumn binaryColumn(String name);
 
-  BoolColumn boolColumn(String name);
+  BoolColumn boolColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
   //#endregion
 
@@ -64,8 +64,8 @@ abstract class Database {
   Future<void> updateSchemaIfNeeded(DbContext dbc) async {
     //fields
     _meta_name = stringColumn("name", 150);
-    _meta_value = intColumn("value").allowNull() as IntColumn;
-    _meta_text = stringColumn("text", 150).allowNull() as StringColumn;
+    _meta_value = intColumn("value", allowNull: true);
+    _meta_text = stringColumn("text", 150, allowNull: true) ;
 
     //table
     _tbl_meta = this.newTable("ds_meta", [_meta_name, _meta_value, _meta_text]);

@@ -5,35 +5,22 @@ abstract class Column extends Expr implements DbObject {
   late Table table;
   late String name;
   late String type;
+
+  /// not used for now
   String? displayName;
 
-  Column(String name, [String? displayName]) {
+  Column(String name, {this.allowNull = false, this.unique = false, Object? defaultValue}) {
     this.name = name;
+    if (defaultValue != null) this.defaultValue = new ValueExpr(defaultValue);
     if (displayName != null) this.displayName = displayName;
-  }
-
-  Column setDisplayName(String displayName) {
-    this.displayName = displayName;
-    return this;
   }
 
   /// <summary>
   /// must be expr to be assigned to Value
   /// </summary>
   ValueExpr? defaultValue;
-
-  bool nullable = false;
+  bool allowNull = false;
   bool unique = false;
-
-  Column allowNull() {
-    this.nullable = true;
-    return this;
-  }
-
-  Column isUnique() {
-    this.unique = true;
-    return this;
-  }
 
   /// <summary>
   /// parametrized query will be used
@@ -47,8 +34,7 @@ abstract class Column extends Expr implements DbObject {
 
 //
 
-
-  String Type() {
+  String getType() {
     return type;
   }
 
@@ -59,16 +45,11 @@ abstract class Column extends Expr implements DbObject {
   String columnDefinition() {
     return "`{0}` {1} {2} {3} {4}".format([
       name,
-      Type(),
-      nullable ? "" : "NOT NULL",
+      getType(),
+      allowNull ? "" : "NOT NULL",
       unique ? "UNIQUE" : "",
       defaultValue == null ? "" : "DEFAULT " + defaultValue!.toSql(null)
     ]);
-  }
-
-  Column setDefaultValue(Object dv) {
-    this.defaultValue = new ValueExpr(dv);
-    return this;
   }
 
 //#region functions
@@ -109,8 +90,7 @@ abstract class Column extends Expr implements DbObject {
 //#endregion
 
   String createCommand() {
-    return "ALTER TABLE `{0}` ADD COLUMN {1}"
-        .format([table.name, columnDefinition()]);
+    return "ALTER TABLE `{0}` ADD COLUMN {1}".format([table.name, columnDefinition()]);
   }
 
   @override
@@ -123,7 +103,8 @@ abstract class Column extends Expr implements DbObject {
 
 abstract class IntColumn extends Column {
   bool autoInc = false;
-  IntColumn(String name) : super(name) {
+  IntColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Int;
   }
 
@@ -131,23 +112,24 @@ abstract class IntColumn extends Column {
     return new Assignment(this, new ValueExpr.Name(this.name, v));
   }
 
-  IntColumn autoIncrement() {
-    autoInc = true;
+  IntColumn setAutoIncrement(bool autoInc) {
+    this.autoInc = autoInc;
     return this;
   }
 
   @override
-  String Type() {
+  String getType() {
     if (autoInc) {
-      return super.Type() + " AUTO_INCREMENT";
+      return super.getType() + " AUTO_INCREMENT";
     } else {
-      return super.Type();
+      return super.getType();
     }
   }
 }
 
 abstract class DoubleColumn extends Column {
-  DoubleColumn(String name) : super(name) {
+  DoubleColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Double;
   }
 
@@ -157,7 +139,8 @@ abstract class DoubleColumn extends Column {
 }
 
 abstract class TextColumn extends Column {
-  TextColumn(String name) : super(name) {
+  TextColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Text;
   }
 
@@ -169,9 +152,10 @@ abstract class TextColumn extends Column {
 abstract class StringColumn extends Column {
   late int _maxLength;
 
-  StringColumn(String name, int max) : super(name) {
+  StringColumn(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.String;
-    this._maxLength = max;
+    this._maxLength = maxLength;
   }
 
   Assignment value(String v) {
@@ -180,7 +164,8 @@ abstract class StringColumn extends Column {
 }
 
 abstract class BoolColumn extends Column {
-  BoolColumn(String name) : super(name) {
+  BoolColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Bool;
   }
 
@@ -190,7 +175,8 @@ abstract class BoolColumn extends Column {
 }
 
 abstract class DateColumn extends Column {
-  DateColumn(String name) : super(name) {
+  DateColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Date;
   }
 
@@ -200,7 +186,8 @@ abstract class DateColumn extends Column {
 }
 
 abstract class DateTimeColumn extends Column {
-  DateTimeColumn(String name) : super(name) {
+  DateTimeColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.DateTime;
   }
 

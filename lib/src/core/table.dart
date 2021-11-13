@@ -6,10 +6,6 @@ class Table extends DbTable {
   late List<Column> fields;
   late List<ForeinKey> FKs;
 
-  Table.Empty() {
-    this.fields = <Column>[];
-    this.FKs = <ForeinKey>[];
-  }
 
   IntColumn get id {
     return fields[0] as IntColumn;
@@ -27,6 +23,9 @@ class Table extends DbTable {
   }
 
   Table(String name, Database database, List<Column> fields) {
+    this.fields = <Column>[];
+    this.FKs = <ForeinKey>[];
+    //
     this.name = name;
     this.db = database;
     db.addIdColumn(this);

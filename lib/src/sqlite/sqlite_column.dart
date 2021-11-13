@@ -1,31 +1,36 @@
 import '../../dart_data_source.dart';
 
 class SqliteInteger extends IntColumn {
-  SqliteInteger(String name) : super(name) {
+  SqliteInteger(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "INTEGER";
   }
 }
 
 class SqliteReal extends DoubleColumn {
-  SqliteReal(String name) : super(name) {
+  SqliteReal(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "REAL";
   }
 }
 
 class SqliteString extends StringColumn {
-  SqliteString(String name, int max) : super(name, max) {
+  SqliteString(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, maxLength, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "TEXT";
   }
 }
 
 class SqliteText extends TextColumn {
-  SqliteText(String name) : super(name) {
+  SqliteText(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "TEXT";
   }
 }
 
 class SqliteBool extends BoolColumn {
-  SqliteBool(String name) : super(name) {
+  SqliteBool(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "INTEGER";
   }
 }
@@ -41,13 +46,15 @@ class SqliteBool extends BoolColumn {
 //}
 
 class SqliteDate extends DateColumn {
-  SqliteDate(String name) : super(name) {
+  SqliteDate(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "TEXT";
   }
 }
 
 class SqliteDateTime extends DateTimeColumn {
-  SqliteDateTime(String name) : super(name) {
+  SqliteDateTime(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
+      : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     this.type = "TEXT";
   }
 }

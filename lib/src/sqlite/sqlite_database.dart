@@ -1,49 +1,46 @@
-
-
 import '../../dart_data_source.dart';
 import 'sqlite_db_context.dart';
 import 'package:sqflite/sqflite.dart' as sqf;
 
-class SqliteDatabase extends Database{
-
+class SqliteDatabase extends Database {
   String _path;
   SqliteDatabase(this._path);
 
   @override
   Future<DbContext> newContext() async {
-    return SqliteDbContext(await sqf.openDatabase(_path));
+    var sdfDb = await sqf.openDatabase(_path);
+    return SqliteDbContext(sdfDb);
   }
 
   @override
   void addIdColumn(Table t) {
-    t.fields.add(
-        new SqliteInteger("id_${t.name}")
-    );
+    // TODO: add another kind of id (uuid, or no id at all)
+    t.fields.add(new SqliteInteger("id_${t.name}"));
   }
 
   @override
-  BoolColumn boolColumn(String name) {
-    return new SqliteBool(name);
+  BoolColumn boolColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteBool(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
-  DateColumn dateColumn(String name) {
-    return new SqliteDate(name);
+  DateColumn dateColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteDate(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
-  DateTimeColumn dateTimeColumn(String name) {
-    return new SqliteDateTime(name);
+  DateTimeColumn dateTimeColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteDateTime(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
-  DoubleColumn doubleColumn(String name) {
-    return new SqliteReal(name);
+  DoubleColumn doubleColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteReal(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
-  IntColumn intColumn(String name) {
-    return new SqliteInteger(name);
+  IntColumn intColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteInteger(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
@@ -52,13 +49,13 @@ class SqliteDatabase extends Database{
   }
 
   @override
-  StringColumn stringColumn(String name, int maxLength) {
-    return new SqliteString(name, maxLength);
+  StringColumn stringColumn(String name, int maxLength,
+      {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteString(name, maxLength, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
 
   @override
-  TextColumn textColumn(String name) {
-    return new SqliteText(name);
+  TextColumn textColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+    return new SqliteText(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
-
 }

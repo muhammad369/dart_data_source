@@ -30,8 +30,8 @@ class JoinTable extends AbsTable {
   @override
   List<FieldInfo> get fieldsInfo {
     var tmp = <FieldInfo>[];
-    tbl1.fieldsInfo!.forEach((element) => tmp.add(element));
-    tbl2.fieldsInfo!.forEach((element) => tmp.add(element));
+    tbl1.fieldsInfo.forEach((element) => tmp.add(element));
+    tbl2.fieldsInfo.forEach((element) => tmp.add(element));
     return tmp;
   }
 }

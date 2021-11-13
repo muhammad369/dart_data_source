@@ -21,6 +21,7 @@ export 'src/core/view.dart';
 export 'src/core/update_statement.dart';
 export 'src/core/trigger.dart';
 export 'src/core/db_context.dart';
+export 'src/core/database_model.dart';
 
 // sqlite
 
