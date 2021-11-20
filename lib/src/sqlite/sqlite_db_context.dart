@@ -46,7 +46,7 @@ class SqliteDbContext extends DbContext{
   Object? getScalarValue(List<Map<String, Object?>> result) {
     if(result == null || result.length == 0) return null;
     if(result[0] == null || result[0].length == 0) return null;
-    return result[0][0];
+    return result[0].values.first;
   }
 
   @override
@@ -84,7 +84,7 @@ class SqliteDbContext extends DbContext{
     }
     var value = _selectLastIdStatement!.executeScalar();
     if(value == null) return 0;
-    return value is int? value : int.parse(value.toString());
+    return await (int.parse(value.toString()));
   }
   
 }

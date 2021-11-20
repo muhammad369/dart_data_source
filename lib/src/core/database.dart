@@ -97,14 +97,14 @@ abstract class Database {
   }
 
   Future<int> currentVersion(DbContext dbc) async {
-    Object? tmp = await dbc
+    String? tmp = await dbc
         .select()
         .from(_tbl_meta)
         .fields([_meta_value])
         .where(_meta_name.equal("schema version"))
         .executeScalar();
     //
-    return tmp == null ? -1 : tmp as int;
+    return tmp == null ? -1 : int.parse(tmp);
   }
 
   //#endregion

@@ -131,13 +131,14 @@ abstract class DbContext {
     return this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList());
   }
 
-  Object? executeScalar(SelectStatement selectStatement) async {
+  Future<Object?> executeScalar(SelectStatement selectStatement) async {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
 
-    return this
-        .getScalarValue(await this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList()));
+    var queryResult = await this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList());
+
+    return this.getScalarValue(queryResult);
   }
 
 //#endregion

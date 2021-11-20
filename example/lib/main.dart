@@ -1,5 +1,6 @@
 import 'package:dart_data_source/dart_data_source.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'db_model.dart';
 
@@ -54,7 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _onBtnPress() async {
-    var db = new InMemoryDatabase();
+    var data_path = (await getApplicationDocumentsDirectory()).path + "/data.db";
+    print('database file: $data_path');
+    //var db = new InMemoryDatabase();
+
+    var db = new SqliteDatabase(data_path);
     var dbm = new DbModel(db);
 
     await dbm.init();

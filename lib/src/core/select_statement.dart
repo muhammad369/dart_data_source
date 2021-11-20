@@ -169,8 +169,8 @@ class SelectStatement extends AbsSelect implements Statement {
     return dbc.executeSelectRow(this);
   }
 
-  Object? executeScalar() {
-    return dbc.executeScalar(this);
+  Future<String?> executeScalar() async{
+    return (await dbc.executeScalar(this))?.toString();
   }
 
   @override
