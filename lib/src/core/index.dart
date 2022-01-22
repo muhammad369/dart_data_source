@@ -6,17 +6,13 @@ class Index extends DbObject {
   late bool _unique;
   late String name;
 
-  Index(String name, Table tbl, List<Column> cols) {
+  Index(String name, Table tbl, List<Column> cols, {bool unique = false}) {
     this.name = name;
     this.tbl = tbl;
     this.cols = cols;
-    this._unique = false;
+    this._unique = unique;
   }
 
-  Index unique() {
-    this._unique = true;
-    return this;
-  }
 
   String createCommand() {
     StringBuffer sb = new StringBuffer();

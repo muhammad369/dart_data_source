@@ -3,30 +3,30 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 /// <summary>
-/// an abstract table is any form may be used to select from as Table, View, JoinTable, SelectStatement
+/// a Queryable is any form may be used to select from such as (Table, View, JoinTable, SelectStatement)
 /// </summary>
-abstract class AbsTable {
+abstract class Queryable {
   String sqlInSelect();
 
   //#region join types
 
-  JoinTable innerJoin(AbsTable t, Expr on) {
+  JoinTable InnerJoin(Queryable t, Expr on) {
     return new JoinTable(this, JoinType.inner, t, on);
   }
 
-  JoinTable outerJoin(AbsTable t, Expr on) {
+  JoinTable OuterJoin(Queryable t, Expr on) {
     return new JoinTable(this, JoinType.full, t, on);
   }
 
-  JoinTable crossJoin(AbsTable t, Expr on) {
+  JoinTable CrossJoin(Queryable t, Expr on) {
     return new JoinTable(this, JoinType.cross, t, on);
   }
 
-  JoinTable leftJoin(AbsTable t, Expr on) {
+  JoinTable LeftJoin(Queryable t, Expr on) {
     return new JoinTable(this, JoinType.left, t, on);
   }
 
-  JoinTable rightJoin(AbsTable t, Expr on) {
+  JoinTable RightJoin(Queryable t, Expr on) {
     return new JoinTable(this, JoinType.right, t, on);
   }
 
@@ -38,7 +38,7 @@ abstract class AbsTable {
 /// <summary>
 /// a table or a view in the database
 /// </summary>
-abstract class DbTable extends AbsTable implements DbObject {
+abstract class DbTable extends Queryable implements DbObject {
   late String name;
   late Database db;
 

@@ -2,8 +2,8 @@ import '../../dart_data_source.dart';
 
 enum JoinType { inner, left, right, full, cross }
 
-class JoinTable extends AbsTable {
-  late AbsTable tbl1, tbl2;
+class JoinTable extends Queryable {
+  late Queryable tbl1, tbl2;
   late Expr on;
   late JoinType join;
 
@@ -15,7 +15,7 @@ class JoinTable extends AbsTable {
     return "(${tbl1.sqlInSelect()}) ${joinNames[join.index]} JOIN (${tbl2.sqlInSelect()}) ON (${on.toSql(null)})";
   }
 
-  JoinTable(AbsTable t1, JoinType j, AbsTable t2, Expr on) {
+  JoinTable(Queryable t1, JoinType j, Queryable t2, Expr on) {
     this.tbl1 = t1;
     this.tbl2 = t2;
     this.join = j;

@@ -3,8 +3,7 @@ import '../../dart_data_source.dart';
 class InsertStatement extends NonQueryStatement {
   late List<Assignment> assigns;
 
-  InsertStatement(DbContext dbc, Table tbl) {
-    this.dbc = dbc;
+  InsertStatement(Table tbl) {
     this.tbl = tbl;
   }
 
@@ -13,6 +12,10 @@ class InsertStatement extends NonQueryStatement {
     return this;
   }
 
+  InsertStatement ValuesMap(Map<String, dynamic> map) {
+    this.assigns = map.entries.map<Assignment>((item) => new Assignment(item.key, new ValueExpr(item.value))).toList();
+    return this;
+  }
 
   @override
   String toSql() {
@@ -20,7 +23,7 @@ class InsertStatement extends NonQueryStatement {
     sb.write("INSERT INTO `${tbl.name}` ( ");
     //fields
     for (Assignment asn in assigns) {
-      sb.write("`${asn.cln.name}` ,");
+      sb.write("`${asn.clnName}` ,");
     }
     var sbt = sb.toString().removeLastChar();
     sb.clear();
@@ -34,24 +37,22 @@ class InsertStatement extends NonQueryStatement {
     return sb.toString().removeLastChar() + ")";
   }
 
-
   @override
-  Future<int> execute([DbContext? dbc]) {
-    return (dbc ?? this.dbc).executeInsert(this);
+  Future<int> execute(DbContext dbc) {
+    return dbc.executeInsert(this);
   }
-  
 }
 
 class Assignment {
-  late Column cln;
+  late String clnName;
   late Expr val;
 
-  Assignment(Column cln, Expr value) {
-    this.cln = cln;
+  Assignment(String cln, Expr value) {
+    this.clnName = cln;
     this.val = value;
   }
 
   String toSql(Statement st) {
-    return "`${cln.name}` = (${val.toSql(st)})";
+    return "`$clnName` = (${val.toSql(st)})";
   }
 }

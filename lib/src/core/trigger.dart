@@ -7,7 +7,7 @@ class Trigger extends DbObject {
   late String name;
   bool before = false; //befor or after
   late Table tbl;
-  late dbEvent _event;
+  late DbEvent _event;
   late List<NonQueryStatement> triggerSteps;
   late Expr when;
 
@@ -16,19 +16,19 @@ class Trigger extends DbObject {
     this.tbl = tbl;
   }
 
-  Trigger Before(dbEvent ev) {
+  Trigger Before(DbEvent ev) {
     this._event = ev;
     this.before = true;
     return this;
   }
 
-  Trigger After(dbEvent ev) {
+  Trigger After(DbEvent ev) {
     this._event = ev;
     this.before = false;
     return this;
   }
 
-  Trigger Actions(List<NonQueryStatement> actions) {
+  Trigger Begin(List<NonQueryStatement> actions) {
     this.triggerSteps = actions;
     return this;
   }
@@ -47,4 +47,4 @@ class Trigger extends DbObject {
   }
 }
 
-enum dbEvent { Insert, Update, Delete }
+enum DbEvent { Insert, Update, Delete }

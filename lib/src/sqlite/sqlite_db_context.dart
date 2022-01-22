@@ -43,7 +43,7 @@ class SqliteDbContext extends DbContext{
   }
 
   @override
-  Object? getScalarValue(List<Map<String, Object?>> result) {
+  Object? getScalarValue(List<Map<String, dynamic>> result) {
     if(result == null || result.length == 0) return null;
     if(result[0] == null || result[0].length == 0) return null;
     return result[0].values.first;
@@ -74,17 +74,6 @@ class SqliteDbContext extends DbContext{
     });
   }
 
-  SelectStatement? _selectLastIdStatement;
 
-  @override
-  Future<int> lastId() async {
-    if (_selectLastIdStatement == null)
-    {
-      _selectLastIdStatement = this.select().fields([new FunctionExpression("last_insert_rowid")]);
-    }
-    var value = _selectLastIdStatement!.executeScalar();
-    if(value == null) return 0;
-    return await (int.parse(value.toString()));
-  }
   
 }

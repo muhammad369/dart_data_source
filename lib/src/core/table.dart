@@ -7,18 +7,18 @@ class Table extends DbTable {
   late List<ForeinKey> FKs;
 
 
-  IntColumn get id {
+  IntColumn get Id {
     return fields[0] as IntColumn;
   }
 
   int newId(DbContext dbc) {
-    Object? tmp = dbc
-        .select()
-        .fields([
-          Expr.Max([this.id])
+    Object? tmp = db
+        .Select()
+        .Fields([
+          Expr.Max([this.Id])
         ])
-        .from(this)
-        .executeScalar();
+        .From(this)
+        .executeScalar(dbc);
     return tmp == null ? 1 : (tmp as int) + 1;
   }
 

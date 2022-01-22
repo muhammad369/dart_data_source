@@ -25,7 +25,7 @@ abstract class DbContext {
 
   //Future rollbackTransaction();
 
-  Future<List<Map<String, Object?>>> rawQuery(String sql, [List<Object>? params]);
+  Future<List<Map<String, dynamic>>> rawQuery(String sql, [List<Object>? params]);
 
   Future<int> rawInsert(String sql, [List<Object>? params]);
 
@@ -49,40 +49,9 @@ abstract class DbContext {
 
   //#endregion
 
-//#region ===== select update insert delete =====
-
-  SelectStatement select() {
-    return new SelectStatement(this);
-  }
-
-  SelectStatement selectDistinct() {
-    return new SelectStatement(this, true);
-  }
-
-  SelectStatement selectListItems(Table tbl, Expr nameField) {
-    return select().from(tbl).fields([tbl.id.As("id"), nameField.As("name")]);
-  }
-
-  UpdateStatement update(Table tbl) {
-    return new UpdateStatement(this, tbl);
-  }
-
-  InsertStatement insertInto(Table tbl) {
-    return new InsertStatement(this, tbl);
-  }
-
-  DeleteStatement deleteFrom(Table tbl) {
-    return new DeleteStatement(this, tbl);
-  }
-
-//#endregion
-
 //#region execute commands
 
-  /// <summary>
-  /// must be used before closing the connection
-  /// </summary>
-  Future<int> lastId();
+
 
   Future<int> executeUpdate(UpdateStatement updateStatement) {
     //startTransaction();
@@ -111,7 +80,7 @@ abstract class DbContext {
   /// <summary>
   /// returns null if no data found
   /// </summary>
-  Future<Map<String, Object?>?> executeSelectRow(SelectStatement selectStatement) async {
+  Future<Map<String, dynamic>?> executeSelectRow(SelectStatement selectStatement) async {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
@@ -123,7 +92,7 @@ abstract class DbContext {
     return result[0];
   }
 
-  Future<List<Map<String, Object?>>> executeSelect(SelectStatement selectStatement) {
+  Future<List<Map<String, dynamic>>> executeSelect(SelectStatement selectStatement) {
     //startTransaction();
 
     var commandText = selectStatement.toSql();

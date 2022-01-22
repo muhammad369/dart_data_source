@@ -3,19 +3,18 @@ import '../../dart_data_source.dart';
 class DeleteStatement extends NonQueryStatement {
   Expr? cond;
 
-  DeleteStatement(DbContext dbc, Table tbl) {
-    this.dbc = dbc;
+  DeleteStatement(Table tbl) {
     this.tbl = tbl;
   }
 
-  DeleteStatement where(Expr cond) {
+  DeleteStatement Where(Expr cond) {
     this.cond = cond;
     return this;
   }
 
   @override
-  Future<int> execute([DbContext? dbc]) {
-    return (dbc ?? this.dbc).executeDelete(this);
+  Future<int> execute(DbContext dbc) {
+    return dbc.executeDelete(this);
   }
 
   @override

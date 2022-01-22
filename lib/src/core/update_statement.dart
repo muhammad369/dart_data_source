@@ -4,8 +4,7 @@ class UpdateStatement extends NonQueryStatement {
   late List<Assignment> assigns;
   Expr? cond;
 
-  UpdateStatement(DbContext dbc, Table tbl) {
-    this.dbc = dbc;
+  UpdateStatement(Table tbl) {
     this.tbl = tbl;
   }
 
@@ -36,7 +35,7 @@ class UpdateStatement extends NonQueryStatement {
   }
 
   @override
-  Future<int> execute([DbContext? dbc]) {
-    return (dbc ?? this.dbc).executeUpdate(this);
+  Future<int> execute(DbContext dbc) {
+    return dbc.executeUpdate(this);
   }
 }

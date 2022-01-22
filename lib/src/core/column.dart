@@ -25,11 +25,11 @@ abstract class Column extends Expr implements DbObject {
   /// <summary>
   /// parametrized query will be used
   /// </summary>
-  Assignment Value(Object value) {
+  Assignment Assign(Object value) {
     if (value is Expr) {
-      return new Assignment(this, value);
+      return new Assignment(this.name, value);
     }
-    return new Assignment(this, new ValueExpr.Name(this.name, value));
+    return new Assignment(this.name, new ValueExpr.Name(this.name, value));
   }
 
 //
@@ -102,8 +102,8 @@ abstract class IntColumn extends Column {
     fieldType = dbType.Int;
   }
 
-  Assignment value(int v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v));
+  Assignment AssignInt(int v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 
   IntColumn setAutoIncrement(bool autoInc) {
@@ -127,8 +127,8 @@ abstract class DoubleColumn extends Column {
     fieldType = dbType.Double;
   }
 
-  Assignment value(double v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v));
+  Assignment AssignDouble(double v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 }
 
@@ -138,8 +138,8 @@ abstract class TextColumn extends Column {
     fieldType = dbType.Text;
   }
 
-  Assignment value(String v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v));
+  Assignment AssignString(String v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 }
 
@@ -152,8 +152,8 @@ abstract class StringColumn extends Column {
     this._maxLength = maxLength;
   }
 
-  Assignment value(String v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v));
+  Assignment AssignString(String v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 }
 
@@ -163,8 +163,8 @@ abstract class BoolColumn extends Column {
     fieldType = dbType.Bool;
   }
 
-  Assignment value(bool v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v));
+  Assignment AssignBool(bool v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 }
 
@@ -174,8 +174,8 @@ abstract class DateColumn extends Column {
     fieldType = dbType.Date;
   }
 
-  Assignment value(DateTime v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v.dateString()));
+  Assignment AssignDate(DateTime v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v.dateString()));
   }
 }
 
@@ -185,8 +185,8 @@ abstract class DateTimeColumn extends Column {
     fieldType = dbType.DateTime;
   }
 
-  Assignment value(DateTime v) {
-    return new Assignment(this, new ValueExpr.Name(this.name, v.dateTimeString()));
+  Assignment AssignDate(DateTime v) {
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v.dateTimeString()));
   }
 }
 

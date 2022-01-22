@@ -23,7 +23,7 @@ class CompoundSelect extends AbsSelect {
   }
 
   @override
-  Future<List<Map>> execute(){
+  Future<List<Map>> execute(DbContext dbc){
     throw Exception('Not Implemented');
   }
 

@@ -20,13 +20,13 @@ abstract class Database {
 
   //#region db-objects
 
-  Index newIndex(String name, Table tbl, List<Column> cols) {
-    return new Index(name, tbl, cols);
+  Index newIndex(String name, Table tbl, List<Column> cols, {bool unique = false}) {
+    return new Index(name, tbl, cols, unique: unique);
   }
 
-  Trigger newTrigger(String name, Table tbl) {
-    return new Trigger(name, tbl);
-  }
+  // Trigger newTrigger(String name, Table tbl) {
+  //   return new Trigger(name, tbl);
+  // }
 
   View newView(String name, AbsSelect select) {
     return new View(this, name, select);
@@ -42,7 +42,8 @@ abstract class Database {
 
   TextColumn textColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
-  StringColumn stringColumn(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue});
+  StringColumn stringColumn(String name, int maxLength,
+      {bool allowNull = false, bool unique = false, Object? defaultValue});
 
   DateColumn dateColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
@@ -53,6 +54,34 @@ abstract class Database {
   BoolColumn boolColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue});
 
   //#endregion
+
+//#region ===== select update insert delete =====
+
+  SelectStatement Select() {
+    return new SelectStatement();
+  }
+
+  SelectStatement SelectDistinct() {
+    return new SelectStatement(distinct: true);
+  }
+
+  SelectStatement SelectListItems(Table tbl, Expr nameField) {
+    return Select().From(tbl).Fields([tbl.Id.As("id"), nameField.As("name")]);
+  }
+
+  UpdateStatement Update(Table tbl) {
+    return new UpdateStatement(tbl);
+  }
+
+  InsertStatement InsertInto(Table tbl) {
+    return new InsertStatement(tbl);
+  }
+
+  DeleteStatement DeleteFrom(Table tbl) {
+    return new DeleteStatement(tbl);
+  }
+
+//#endregion
 
   //#region META
 
@@ -65,11 +94,10 @@ abstract class Database {
     //fields
     _meta_name = stringColumn("name", 150);
     _meta_value = intColumn("value", allowNull: true);
-    _meta_text = stringColumn("text", 150, allowNull: true) ;
+    _meta_text = stringColumn("text", 150, allowNull: true);
 
     //table
     _tbl_meta = this.newTable("ds_meta", [_meta_name, _meta_value, _meta_text]);
-
 
     //this.startTransaction();
     //create if not exists
@@ -79,17 +107,20 @@ abstract class Database {
       int ver = await currentVersion(transactionContext);
       if (ver == -1) {
         // insert version row
-        await transactionContext
-            .insertInto(_tbl_meta)
-            .Values([_meta_name.value("schema version"), _meta_value.value(0)]).execute();
+        await this
+            .InsertInto(_tbl_meta)
+            .Values([_meta_name.Assign("schema version"), _meta_value.Assign(0)])
+            .execute(transactionContext);
+        //
+        ver = 0;
       }
       //
-      ver = 0;
-      //
-      for (int i = ver; i < schemaUpdates.length; i++) {
-        await schemaUpdates[i].apply(transactionContext);
+      if (ver < schemaUpdates.length) {
+        for (int i = ver; i < schemaUpdates.length; i++) {
+          await schemaUpdates[i].apply(transactionContext);
+        }
+        await _setSchemaVersion(transactionContext, schemaUpdates.length);
       }
-      await _setSchemaVersion(transactionContext, schemaUpdates.length);
     });
 
     //commit
@@ -97,14 +128,14 @@ abstract class Database {
   }
 
   Future<int> currentVersion(DbContext dbc) async {
-    String? tmp = await dbc
-        .select()
-        .from(_tbl_meta)
-        .fields([_meta_value])
-        .where(_meta_name.equal("schema version"))
-        .executeScalar();
+    Object? tmp = await this
+        .Select()
+        .From(_tbl_meta)
+        .Fields([_meta_value])
+        .Where(_meta_name.Equal("schema version"))
+        .executeScalar(dbc);
     //
-    return tmp == null ? -1 : int.parse(tmp);
+    return tmp == null ? -1 : tmp as int;//int.parse(tmp);
   }
 
   //#endregion
@@ -117,12 +148,21 @@ abstract class Database {
   }
 
   void addSchemaUpdateObjects(List<DbObject> dbObjs) {
-    schemaUpdates.add(new SchemaUpdate(dbObjs));
+    schemaUpdates.add(new SchemaUpdate(objects: dbObjs));
   }
 
   Future<void> _setSchemaVersion(DbContext dbc, int version) async {
-    await dbc.update(_tbl_meta).Set([_meta_value.value(version)]).Where(_meta_name.equal("schema version")).execute();
+    await this
+        .Update(_tbl_meta)
+        .Set([_meta_value.Assign(version)])
+        .Where(_meta_name.Equal("schema version"))
+        .execute(dbc);
   }
+
+  /// <summary>
+  /// must be used before closing the connection
+  /// </summary>
+  Future<int> lastId(DbContext dbc);
 
   //#endregion
 

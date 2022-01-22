@@ -11,87 +11,89 @@ abstract class Expr {
   String toSql(Statement? st);
 
   //#region methods binary
-  Expr equal(Object o) {
+  Expr Equal(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "=", o)..fieldType = dbType.Bool;
     }
-    return equal(new ValueExpr(o)..fieldType = dbType.Bool);
+    return Equal(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr notEqual(Object o) {
+  Expr NotEqual(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "<>", o)..fieldType = dbType.Bool;
     }
-    return notEqual(new ValueExpr(o)..fieldType = dbType.Bool);
+    return NotEqual(new ValueExpr(o)..fieldType = dbType.Bool);
   }
 
-  Expr concat(Object o) {
+  Expr Concat(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "||", o)..fieldType = dbType.String;
     }
-    return concat(new ValueExpr(o)..fieldType = dbType.String);
+    return Concat(new ValueExpr(o)..fieldType = dbType.String);
   }
 
-  Expr minus(Object o) {
-    if (o is Expr) {
+  Expr Subtract(Expr o) {
       return new BinaryExpression(this, "-", o)..fieldType = this.fieldType;
-    }
-    return this.minus(new ValueExpr(o)..fieldType = this.fieldType);
   }
+  
+  Expr SubtractValue(num value){
+    return this.Subtract(new ValueExpr(value)..fieldType = this.fieldType);
+  }
+  
 
-  Expr plus(Expr exp) {
+  Expr Plus(Expr exp) {
     return new BinaryExpression(this, "+", exp)..fieldType = this.fieldType;
   }
 
-  Expr plusValue(double value) {
-    return plus(new ValueExpr(value)..fieldType = this.fieldType);
+  Expr PlusValue(num value) {
+    return Plus(new ValueExpr(value)..fieldType = this.fieldType);
   }
 
-  Expr mod(Expr exp) {
+  Expr Mod(Expr exp) {
     return new BinaryExpression(this, "%", exp)..fieldType = dbType.Int;
   }
 
-  Expr modValue(double value) {
-    return mod(new ValueExpr(value)..fieldType = dbType.Int);
+  Expr ModValue(num value) {
+    return Mod(new ValueExpr(value)..fieldType = dbType.Int);
   }
 
-  Expr multiply(Expr exp) {
+  Expr Multiply(Expr exp) {
     return new BinaryExpression(this, "*", exp)..fieldType = dbType.Double;
   }
 
-  Expr multiplyValue(double o) {
-    return multiply(new ValueExpr(o)..fieldType = dbType.Double);
+  Expr MultiplyValue(double o) {
+    return Multiply(new ValueExpr(o)..fieldType = dbType.Double);
   }
 
-  Expr divide(Expr exp) {
+  Expr Divide(Expr exp) {
     return new BinaryExpression(this, "/", exp)..fieldType = dbType.Double;
   }
 
-  Expr divideValue(double o) {
-    return divide(new ValueExpr(o)..fieldType = dbType.Double);
+  Expr DivideValue(double o) {
+    return Divide(new ValueExpr(o)..fieldType = dbType.Double);
   }
 
-  Expr AND(Expr exp) {
+  Expr And(Expr exp) {
     return new BinaryExpression(this, "AND", exp)..fieldType = dbType.Bool;
   }
 
-  Expr OR(Expr exp) {
+  Expr Or(Expr exp) {
     return new BinaryExpression(this, "OR", exp)..fieldType = dbType.Bool;
   }
 
-  Expr greaterThan(Expr exp) {
+  Expr GreaterThan(Expr exp) {
     return new BinaryExpression(this, ">", exp)..fieldType = dbType.Bool;
   }
 
-  Expr greaterOrEqual(Expr exp) {
+  Expr GreaterOrEqual(Expr exp) {
     return new BinaryExpression(this, ">=", exp)..fieldType = dbType.Bool;
   }
 
-  Expr lessThan(Expr exp) {
+  Expr LessThan(Expr exp) {
     return new BinaryExpression(this, "<", exp)..fieldType = dbType.Bool;
   }
 
-  Expr lessOrEqual(Expr exp) {
+  Expr LessOrEqual(Expr exp) {
     return new BinaryExpression(this, "<=", exp)..fieldType = dbType.Bool;
   }
 
@@ -103,50 +105,50 @@ abstract class Expr {
     return new InExpression(this, false, values)..fieldType = dbType.Bool;
   }
 
-  Expr IN(AbsSelect select) {
+  Expr In(AbsSelect select) {
     return new InExpression.Select(this, true, select)..fieldType = dbType.Bool;
   }
 
-  Expr NotIN(AbsSelect select) {
+  Expr NotIn(AbsSelect select) {
     return new InExpression.Select(this, false, select)
       ..fieldType = dbType.Bool;
   }
 
-  Expr inTable(DbTable table) {
+  Expr InTable(DbTable table) {
     return new InExpression.Table(this, true, table)..fieldType = dbType.Bool;
   }
 
-  Expr notInTable(DbTable table) {
+  Expr NotInTable(DbTable table) {
     return new InExpression.Table(this, false, table)..fieldType = dbType.Bool;
   }
 
-  Expr between(Expr exp1, Expr exp2) {
+  Expr Between(Expr exp1, Expr exp2) {
     return new BetweenExpression(this, true, exp1, exp2)
       ..fieldType = dbType.Bool;
   }
 
-  Expr notBetween(Expr exp1, Expr exp2) {
+  Expr NotBetween(Expr exp1, Expr exp2) {
     return new BetweenExpression(this, false, exp1, exp2)
       ..fieldType = dbType.Bool;
   }
 
-  Expr betweenValues(Object val1, Object val2) {
+  Expr BetweenValues(Object val1, Object val2) {
     return new BetweenExpression(
         this, true, new ValueExpr(val1), new ValueExpr(val2))
       ..fieldType = dbType.Bool;
   }
 
-  Expr notBetweenValues(Object val1, Object val2) {
+  Expr NotBetweenValues(Object val1, Object val2) {
     return new BetweenExpression(
         this, false, new ValueExpr(val1), new ValueExpr(val2))
       ..fieldType = dbType.Bool;
   }
 
-  Expr isNull() {
+  Expr IsNull() {
     return new NullCheckExp(this, true)..fieldType = dbType.Bool;
   }
 
-  Expr notNull() {
+  Expr NotNull() {
     return new NullCheckExp(this, false)..fieldType = dbType.Bool;
   }
 
@@ -345,7 +347,7 @@ class ValueExpr extends Expr {
   }
 
   /// <summary>
-  /// use this constructor for parametried query
+  /// use this constructor for parametrized query
   /// </summary>
   ValueExpr.Name(String name, Object val) {
     this.name = name;

@@ -2,10 +2,9 @@ import '../../dart_data_source.dart';
 
 abstract class NonQueryStatement extends Statement {
 
-  late DbContext dbc;
   late Table tbl;
 
-  Future<int> execute([DbContext? dbc]);
+  Future<int> execute(DbContext dbc);
 
   String toSql();
 

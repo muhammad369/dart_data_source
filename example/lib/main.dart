@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var dbc = await db.newContext();
     var version = await db.currentVersion(dbc);
-    //expect(version, 1);
+    print('db version $version');
 
     dbc.close();
   }

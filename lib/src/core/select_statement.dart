@@ -4,26 +4,24 @@ import '../../dart_data_source.dart';
 
 class SelectStatement extends AbsSelect implements Statement {
 //must be initialized
-  late DbContext dbc;
   late bool distinct;
   List<Expr>? selectFields;
   List<DbTable>? tableFields;
-  AbsTable? targetTable;
+  Queryable? targetTable;
   Expr? cond;
   List<Expr>? groupBys;
   Expr? havingExp;
   List<SortExp>? sortList;
   int pageIndex = 0, pageSize = 0;
 
-  SelectStatement(DbContext dbc, [bool distinct = false]) {
-    this.dbc = dbc;
+  SelectStatement({bool distinct = false}) {
     this.distinct = distinct;
   }
 
   /// <summary>
   /// if used multiple times the last one will override
   /// </summary>
-  SelectStatement fields(List<Expr> exprs) {
+  SelectStatement Fields(List<Expr> exprs) {
     this.selectFields = exprs;
     return this;
   }
@@ -31,7 +29,7 @@ class SelectStatement extends AbsSelect implements Statement {
   /// <summary>
   /// if used multiple times the last one will override
   /// </summary>
-  SelectStatement fieldsFromTable(List<DbTable> tablesAndViews) {
+  SelectStatement FieldsFromTable(List<DbTable> tablesAndViews) {
     this.tableFields = tablesAndViews;
     return this;
   }
@@ -39,7 +37,7 @@ class SelectStatement extends AbsSelect implements Statement {
   /// <summary>
   /// use it once, if used multiple times, the last one will override
   /// </summary>
-  SelectStatement from(AbsTable table) {
+  SelectStatement From(Queryable table) {
     this.targetTable = table;
     return this;
   }
@@ -47,23 +45,23 @@ class SelectStatement extends AbsSelect implements Statement {
   /// <summary>
   /// use only once
   /// </summary>
-  SelectStatement where(Expr cond) {
+  SelectStatement Where(Expr cond) {
     this.cond = cond;
     return this;
   }
 
-  SelectStatement orderBy(List<SortExp> sortExps) {
+  SelectStatement OrderBy(List<SortExp> sortExps) {
     this.sortList = sortExps;
     return this;
   }
 
-  SelectStatement page(int index, int pageSize) {
+  SelectStatement Page(int index, int pageSize) {
     this.pageIndex = index;
     this.pageSize = pageSize;
     return this;
   }
 
-  SelectStatement groupBy(List<Expr> exps) {
+  SelectStatement GroupBy(List<Expr> exps) {
     this.groupBys = exps;
     return this;
   }
@@ -71,7 +69,7 @@ class SelectStatement extends AbsSelect implements Statement {
   /// <summary>
   /// only use with gruopBy() otherwise it's useless
   /// </summary>
-  SelectStatement having(Expr exp) {
+  SelectStatement Having(Expr exp) {
     this.havingExp = exp;
     return this;
   }
@@ -146,8 +144,8 @@ class SelectStatement extends AbsSelect implements Statement {
   /// returns empty datatable for no data
   /// </summary>
   @override
-  Future<List<Map>> execute([DbContext? dbc]) {
-    return (dbc ?? this.dbc).executeSelect(this);
+  Future<List<Map<String, dynamic>>> execute(DbContext dbc) {
+    return dbc.executeSelect(this);
   }
 
 //#endregion
@@ -165,12 +163,12 @@ class SelectStatement extends AbsSelect implements Statement {
   /// <summary>
   /// returns the first row of the result set, or null if no data found
   /// </summary>
-  Future<Map?> executeRow() {
+  Future<Map<String, dynamic>?> executeRow(DbContext dbc) {
     return dbc.executeSelectRow(this);
   }
 
-  Future<String?> executeScalar() async{
-    return (await dbc.executeScalar(this))?.toString();
+  Future<Object?> executeScalar(DbContext dbc) async{
+    return (await dbc.executeScalar(this));
   }
 
   @override

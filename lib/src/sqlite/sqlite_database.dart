@@ -57,4 +57,17 @@ class SqliteDatabase extends Database {
   TextColumn textColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
     return new SqliteText(name, unique: unique, allowNull: allowNull, defaultValue: defaultValue);
   }
+
+  SelectStatement? _selectLastIdStatement;
+
+  @override
+  Future<int> lastId(DbContext dbc) async {
+    if (_selectLastIdStatement == null)
+    {
+      _selectLastIdStatement = this.Select().Fields([new FunctionExpression("last_insert_rowid")]);
+    }
+    var value = await _selectLastIdStatement!.executeScalar(dbc);
+    if(value == null) return 0;
+    return (int.parse(value.toString()));
+  }
 }

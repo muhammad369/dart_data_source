@@ -1,27 +1,38 @@
 import '../../dart_data_source.dart';
 
 class SchemaUpdate {
-  late List<DbObject> objects ;
-
-  List<NonQueryStatement> statements = <NonQueryStatement>[];
+  late List<DbObject> objects;
+  late List<NonQueryStatement> statements;
+  late List<String> rawSql;
 
   //constructor
   //SchemaUpdate() { }
 
-  SchemaUpdate(List<DbObject> dbos) {
-    this.objects = dbos;
+  SchemaUpdate({List<DbObject>? objects, List<NonQueryStatement>? statements, List<String>? rawSql}) {
+    this.objects = objects ?? [];
+    this.statements = statements ?? [];
+    this.rawSql = rawSql ?? [];
   }
 
   /// <summary>
-  /// executes to the database without commiting
+  /// executes to the database without committing
   /// </summary>
   Future<void> apply(DbContext dbc) async {
     for (DbObject dbo in objects) {
-      await dbc.create(dbo);
+      try {
+        await dbc.create(dbo);
+      } catch (error) {
+        if(error.toString().contains('duplicate column name'))
+          continue;
+      }
     }
     //
     for (NonQueryStatement st in statements) {
-      await st.execute();
+      await st.execute(dbc);
+    }
+    //
+    for (String sql in rawSql) {
+      await dbc.executeSql(sql);
     }
   }
 
