@@ -4,7 +4,7 @@ import '../../dart_data_source.dart';
 
 class Table extends DbTable {
   late List<Column> fields;
-  late List<ForeinKey> FKs;
+  late List<_ForeinKey> FKs;
 
 
   IntColumn get Id {
@@ -24,7 +24,7 @@ class Table extends DbTable {
 
   Table(String name, Database database, List<Column> fields) {
     this.fields = <Column>[];
-    this.FKs = <ForeinKey>[];
+    this.FKs = <_ForeinKey>[];
     //
     this.name = name;
     this.db = database;
@@ -49,7 +49,7 @@ class Table extends DbTable {
 
     this.fields.add(tmp);
 
-    this.FKs.add(new ForeinKey(tmp, table));
+    this.FKs.add(new _ForeinKey(tmp, table));
 
     return tmp;
   }
@@ -63,8 +63,8 @@ class Table extends DbTable {
       sb.write("${col.columnDefinition()} ,");
     }
     //forein keys
-    for (ForeinKey fk in this.FKs) {
-      sb.write("FOREIGN KEY (`${fk.coln.name}`) REFERENCES `${fk.tbl.name}` ON DELETE CASCADE,");
+    for (_ForeinKey fk in this.FKs) {
+      sb.write("FOREIGN KEY (`${fk._coln.name}`) REFERENCES `${fk._tbl.name}` ON DELETE CASCADE,");
     }
     //primary key
     sb.write("PRIMARY KEY (`${this.fields[0].name}`)");
@@ -84,12 +84,12 @@ class Table extends DbTable {
   }
 }
 
-class ForeinKey {
-  late Column coln;
-  late Table tbl;
+class _ForeinKey {
+  late Column _coln;
+  late Table _tbl;
 
-  ForeinKey(Column coln, Table tbl) {
-    this.coln = coln;
-    this.tbl = tbl;
+  _ForeinKey(Column coln, Table tbl) {
+    this._coln = coln;
+    this._tbl = tbl;
   }
 }

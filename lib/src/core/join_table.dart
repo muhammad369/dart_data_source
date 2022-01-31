@@ -3,30 +3,30 @@ import '../../dart_data_source.dart';
 enum JoinType { inner, left, right, full, cross }
 
 class JoinTable extends Queryable {
-  late Queryable tbl1, tbl2;
-  late Expr on;
-  late JoinType join;
+  late Queryable _tbl1, _tbl2;
+  late Expr _on;
+  late JoinType _join;
 
-  static List<String> joinNames = <String>[]
+  static List<String> _joinNames = <String>[]
     ..addAll(["INNER", "LEFT OUTER", "RIGHT OUTER", "FULL OUTER", "CROSS"]);
 
   @override
   String sqlInSelect() {
-    return "(${tbl1.sqlInSelect()}) ${joinNames[join.index]} JOIN (${tbl2.sqlInSelect()}) ON (${on.toSql(null)})";
+    return "(${_tbl1.sqlInSelect()}) ${_joinNames[_join.index]} JOIN (${_tbl2.sqlInSelect()}) ON (${_on.toSql(null)})";
   }
 
   JoinTable(Queryable t1, JoinType j, Queryable t2, Expr on) {
-    this.tbl1 = t1;
-    this.tbl2 = t2;
-    this.join = j;
-    this.on = on;
+    this._tbl1 = t1;
+    this._tbl2 = t2;
+    this._join = j;
+    this._on = on;
   }
 
   @override
   List<FieldInfo> get fieldsInfo {
     var tmp = <FieldInfo>[];
-    tbl1.fieldsInfo.forEach((element) => tmp.add(element));
-    tbl2.fieldsInfo.forEach((element) => tmp.add(element));
+    _tbl1.fieldsInfo.forEach((element) => tmp.add(element));
+    _tbl2.fieldsInfo.forEach((element) => tmp.add(element));
     return tmp;
   }
 }

@@ -2,25 +2,27 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 abstract class Column extends Expr implements DbObject {
-  late Table table;
+  late Table _table;
   late String name;
   late String type;
 
   /// not used for now
-  String? displayName;
+  //String? displayName;
 
-  Column(String name, {this.allowNull = false, this.unique = false, Object? defaultValue}) {
+  Column(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
     this.name = name;
-    if (defaultValue != null) this.defaultValue = new ValueExpr(defaultValue);
-    if (displayName != null) this.displayName = displayName;
+    this._allowNull = allowNull;
+    this._unique = unique;
+    if (defaultValue != null) this._defaultValue = new ValueExpr(defaultValue);
+    //if (displayName != null) this.displayName = displayName;
   }
 
   /// <summary>
   /// must be expr to be assigned to Value
   /// </summary>
-  ValueExpr? defaultValue;
-  bool allowNull = false;
-  bool unique = false;
+  ValueExpr? _defaultValue;
+  bool _allowNull = false;
+  bool _unique = false;
 
   /// <summary>
   /// parametrized query will be used
@@ -34,16 +36,16 @@ abstract class Column extends Expr implements DbObject {
 
 //
 
-  String getType() {
+  String _getType() {
     return type;
   }
 
   void setTable(Table table) {
-    this.table = table;
+    this._table = table;
   }
 
   String columnDefinition() {
-    return '`${name}` ${getType()} ${allowNull ? "" : "NOT NULL"} ${unique ? "UNIQUE" : ""} ${defaultValue == null ? "" : "DEFAULT " + defaultValue!.toSql(null)}';
+    return '`${name}` ${_getType()} ${_allowNull ? "" : "NOT NULL"} ${_unique ? "UNIQUE" : ""} ${_defaultValue == null ? "" : "DEFAULT " + _defaultValue!.toSql(null)}';
   }
 
 //#region functions
@@ -84,7 +86,7 @@ abstract class Column extends Expr implements DbObject {
 //#endregion
 
   String createCommand() {
-    return "ALTER TABLE `${table.name}` ADD COLUMN ${columnDefinition()}";
+    return "ALTER TABLE `${_table.name}` ADD COLUMN ${columnDefinition()}";
   }
 
   @override
@@ -112,11 +114,11 @@ abstract class IntColumn extends Column {
   }
 
   @override
-  String getType() {
+  String _getType() {
     if (autoInc) {
-      return super.getType() + " AUTO_INCREMENT";
+      return super._getType() + " AUTO_INCREMENT";
     } else {
-      return super.getType();
+      return super._getType();
     }
   }
 }

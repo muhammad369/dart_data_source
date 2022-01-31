@@ -115,11 +115,11 @@ abstract class Database {
         ver = 0;
       }
       //
-      if (ver < schemaUpdates.length) {
-        for (int i = ver; i < schemaUpdates.length; i++) {
-          await schemaUpdates[i].apply(transactionContext);
+      if (ver < _schemaUpdates.length) {
+        for (int i = ver; i < _schemaUpdates.length; i++) {
+          await _schemaUpdates[i].apply(transactionContext);
         }
-        await _setSchemaVersion(transactionContext, schemaUpdates.length);
+        await _setSchemaVersion(transactionContext, _schemaUpdates.length);
       }
     });
 
@@ -141,14 +141,14 @@ abstract class Database {
   //#endregion
 
   //#region schema updates
-  List<SchemaUpdate> schemaUpdates = <SchemaUpdate>[];
+  List<SchemaUpdate> _schemaUpdates = <SchemaUpdate>[];
 
   void addSchemaUpdate(SchemaUpdate su) {
-    schemaUpdates.add(su);
+    _schemaUpdates.add(su);
   }
 
   void addSchemaUpdateObjects(List<DbObject> dbObjs) {
-    schemaUpdates.add(new SchemaUpdate(objects: dbObjs));
+    _schemaUpdates.add(new SchemaUpdate(objects: dbObjs));
   }
 
   Future<void> _setSchemaVersion(DbContext dbc, int version) async {

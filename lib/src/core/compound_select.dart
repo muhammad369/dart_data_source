@@ -5,21 +5,21 @@ import '../../dart_data_source.dart';
 enum select_comp_op { union, unionAll, intersect, except }
 
 class CompoundSelect extends AbsSelect {
-  late AbsSelect select1, select2;
-  late select_comp_op op;
+  late AbsSelect _select1, _select2;
+  late select_comp_op _op;
 
-  static List<String> ops = <String>[]
+  static List<String> _ops = <String>[]
     ..addAll(["UNION", "UNION ALL", "INTERSECT", "EXCEPT"]);
 
   CompoundSelect(select_comp_op op, AbsSelect select1, AbsSelect select2) {
-    this.select1 = select1;
-    this.select2 = select2;
-    this.op = op;
+    this._select1 = select1;
+    this._select2 = select2;
+    this._op = op;
   }
 
   @override
   String sqlInSelect() {
-    return "(${select1.sqlInSelect()}) ${ops[op.index]} ${select2.sqlInSelect()}";
+    return "(${_select1.sqlInSelect()}) ${_ops[_op.index]} ${_select2.sqlInSelect()}";
   }
 
   @override
@@ -29,6 +29,6 @@ class CompoundSelect extends AbsSelect {
 
   @override
   List<FieldInfo> get fieldsInfo {
-    return [...select1.fieldsInfo, ...select2.fieldsInfo];
+    return [..._select1.fieldsInfo, ..._select2.fieldsInfo];
   }
 }

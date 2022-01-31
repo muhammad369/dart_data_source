@@ -1,20 +1,20 @@
 import '../../dart_data_source.dart';
 
 class UpdateStatement extends NonQueryStatement {
-  late List<Assignment> assigns;
-  Expr? cond;
+  late List<Assignment> _assigns;
+  Expr? _cond;
 
   UpdateStatement(Table tbl) {
     this.tbl = tbl;
   }
 
   UpdateStatement Set(List<Assignment> assignments) {
-    this.assigns = assignments;
+    this._assigns = assignments;
     return this;
   }
 
   UpdateStatement Where(Expr cond) {
-    this.cond = cond;
+    this._cond = cond;
     return this;
   }
 
@@ -25,11 +25,11 @@ class UpdateStatement extends NonQueryStatement {
     StringBuffer sb = new StringBuffer();
     sb.write("UPDATE `${this.tbl.name}` SET ");
 
-    sb.writeAll(assigns.map((a) => a.toSql(this)), " , ");
+    sb.writeAll(_assigns.map((a) => a.toSql(this)), " , ");
 
     //
-    if (cond != null) {
-      sb.write(" WHERE (${cond!.toSql(this)}) ");
+    if (_cond != null) {
+      sb.write(" WHERE (${_cond!.toSql(this)}) ");
     }
     return sb.toString();
   }
