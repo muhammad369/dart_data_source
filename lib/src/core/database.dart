@@ -10,7 +10,7 @@ abstract class Database {
   /// <summary>
   /// implemented by the db, pass columns except primary and forein keys
   /// </summary>
-  Table newTable(String name, List<Column> fields);
+  Table newTable(String name, List<DbColumn> fields);
 
   //#region execute commands
 
@@ -20,7 +20,7 @@ abstract class Database {
 
   //#region db-objects
 
-  Index newIndex(String name, Table tbl, List<Column> cols, {bool unique = false}) {
+  Index newIndex(String name, Table tbl, List<DbColumn> cols, {bool unique = false}) {
     return new Index(name, tbl, cols, unique: unique);
   }
 

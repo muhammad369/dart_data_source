@@ -188,8 +188,8 @@ class SelectStatement extends AbsSelect implements Statement {
       //fields
       if (_selectFields != null) {
         for (Expr exp in _selectFields!) {
-          if (exp is Column) {
-            tmp.add(new FieldInfo.fromColumn(exp as Column));
+          if (exp is DbColumn) {
+            tmp.add(new FieldInfo.fromColumn(exp as DbColumn));
           } else if (exp is AliasedExpr) {
             var a = exp as AliasedExpr;
             tmp.add(new FieldInfo(a.fieldType, a.alias));

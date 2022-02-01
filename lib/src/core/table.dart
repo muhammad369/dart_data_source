@@ -3,7 +3,7 @@ import 'dart:core';
 import '../../dart_data_source.dart';
 
 class Table extends DbTable {
-  late List<Column> fields;
+  late List<DbColumn> fields;
   late List<_ForeinKey> FKs;
 
 
@@ -22,8 +22,8 @@ class Table extends DbTable {
     return tmp == null ? 1 : (tmp as int) + 1;
   }
 
-  Table(String name, Database database, List<Column> fields) {
-    this.fields = <Column>[];
+  Table(String name, Database database, List<DbColumn> fields) {
+    this.fields = <DbColumn>[];
     this.FKs = <_ForeinKey>[];
     //
     this.name = name;
@@ -31,7 +31,7 @@ class Table extends DbTable {
     db.addIdColumn(this);
     this.fields.addAll(fields);
 
-    for (Column f in fields) {
+    for (DbColumn f in fields) {
       f.setTable(this);
     }
   }
@@ -59,7 +59,7 @@ class Table extends DbTable {
     StringBuffer sb = new StringBuffer();
     sb.write("CREATE TABLE IF NOT EXISTS `${this.name}` (");
     //columns
-    for (Column col in fields) {
+    for (DbColumn col in fields) {
       sb.write("${col.columnDefinition()} ,");
     }
     //forein keys
@@ -85,10 +85,10 @@ class Table extends DbTable {
 }
 
 class _ForeinKey {
-  late Column _coln;
+  late DbColumn _coln;
   late Table _tbl;
 
-  _ForeinKey(Column coln, Table tbl) {
+  _ForeinKey(DbColumn coln, Table tbl) {
     this._coln = coln;
     this._tbl = tbl;
   }

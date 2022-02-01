@@ -154,7 +154,7 @@ abstract class Expr {
 
   /// <summary>
   /// matches against a pattern, use % to match any number of chars or digits(or none),
-  /// and _ to match one, you can use it with text or numeric columns
+  /// and _ to match exactly one char, you can use it with text or numeric columns
   /// </summary>
   Expr Like(String pattern) {
     return new BinaryExpression(this, "LIKE", new ValueExpr(pattern));
@@ -474,7 +474,7 @@ class FieldInfo {
     this.type = type;
   }
 
-  FieldInfo.fromColumn(Column col) {
+  FieldInfo.fromColumn(DbColumn col) {
     this.name = col.name;
     this.type = col.fieldType;
   }

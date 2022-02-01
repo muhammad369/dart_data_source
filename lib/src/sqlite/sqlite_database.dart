@@ -43,7 +43,7 @@ class SqliteDatabase extends Database {
   }
 
   @override
-  Table newTable(String name, List<Column> fields) {
+  Table newTable(String name, List<DbColumn> fields) {
     return new Table(name, this, fields);
   }
 

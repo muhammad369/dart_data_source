@@ -2,11 +2,11 @@ import '../../dart_data_source.dart';
 
 class Index extends DbObject {
   late Table _tbl;
-  late List<Column> _cols;
+  late List<DbColumn> _cols;
   late bool _unique;
   late String _name;
 
-  Index(String name, Table tbl, List<Column> cols, {bool unique = false}) {
+  Index(String name, Table tbl, List<DbColumn> cols, {bool unique = false}) {
     this._name = name;
     this._tbl = tbl;
     this._cols = cols;
@@ -18,7 +18,7 @@ class Index extends DbObject {
     StringBuffer sb = new StringBuffer();
     sb.write("CREATE ${_unique ? "UNIQUE" : ""} INDEX ");
     sb.write(" `${this._name}` ON `${this._tbl.name}` ( ");
-    for (Column col in this._cols) {
+    for (DbColumn col in this._cols) {
       sb.write("`${col.name}` ,");
     }
 

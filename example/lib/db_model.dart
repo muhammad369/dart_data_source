@@ -7,7 +7,7 @@ class DbModel extends DatabaseModel {
   late Table gradesTable;
 
   // student
-  late Column studentName;
+  late DbColumn studentName;
   late IntColumn studentDegree;
   late Table studentsTable;
 
@@ -26,8 +26,8 @@ class DbModel extends DatabaseModel {
 
   @override
   void defineDatabaseObjects(Database db) {
-    // Grade table
 
+    // Grade table
     gradeName = db.stringColumn('gradeName', 50);
     studentsCount = db.intColumn('studentsCount', defaultValue: 0);
 

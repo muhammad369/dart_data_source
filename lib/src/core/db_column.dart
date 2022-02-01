@@ -1,7 +1,7 @@
 import 'dart:core';
 import '../../dart_data_source.dart';
 
-abstract class Column extends Expr implements DbObject {
+abstract class DbColumn extends Expr implements DbObject {
   late Table _table;
   late String name;
   late String type;
@@ -9,7 +9,7 @@ abstract class Column extends Expr implements DbObject {
   /// not used for now
   //String? displayName;
 
-  Column(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
+  DbColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue}) {
     this.name = name;
     this._allowNull = allowNull;
     this._unique = unique;
@@ -97,7 +97,7 @@ abstract class Column extends Expr implements DbObject {
 
 //#region column-children
 
-abstract class IntColumn extends Column {
+abstract class IntColumn extends DbColumn {
   bool autoInc = false;
   IntColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
@@ -123,7 +123,7 @@ abstract class IntColumn extends Column {
   }
 }
 
-abstract class DoubleColumn extends Column {
+abstract class DoubleColumn extends DbColumn {
   DoubleColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Double;
@@ -134,7 +134,7 @@ abstract class DoubleColumn extends Column {
   }
 }
 
-abstract class TextColumn extends Column {
+abstract class TextColumn extends DbColumn {
   TextColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Text;
@@ -145,7 +145,7 @@ abstract class TextColumn extends Column {
   }
 }
 
-abstract class StringColumn extends Column {
+abstract class StringColumn extends DbColumn {
   late int _maxLength;
 
   StringColumn(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue})
@@ -159,7 +159,7 @@ abstract class StringColumn extends Column {
   }
 }
 
-abstract class BoolColumn extends Column {
+abstract class BoolColumn extends DbColumn {
   BoolColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Bool;
@@ -170,7 +170,7 @@ abstract class BoolColumn extends Column {
   }
 }
 
-abstract class DateColumn extends Column {
+abstract class DateColumn extends DbColumn {
   DateColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Date;
@@ -181,7 +181,7 @@ abstract class DateColumn extends Column {
   }
 }
 
-abstract class DateTimeColumn extends Column {
+abstract class DateTimeColumn extends DbColumn {
   DateTimeColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.DateTime;

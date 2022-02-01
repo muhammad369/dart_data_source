@@ -2,7 +2,7 @@ library dart_data_source;
 
 export 'src/core/abs_select.dart';
 export 'src/core/queryable.dart';
-export 'src/core/column.dart';
+export 'src/core/db_column.dart';
 export 'src/core/compound_select.dart';
 export 'src/core/database.dart';
 export 'src/core/db_object.dart';
