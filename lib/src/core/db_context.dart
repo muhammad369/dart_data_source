@@ -1,6 +1,4 @@
-import 'dart:core';
-
-import 'package:dart_data_source/dart_data_source.dart';
+part of datasource_core;
 
 /// the abstract operation to be implemented by every db type
 abstract class DbContext {
@@ -58,7 +56,7 @@ abstract class DbContext {
 
     var commandText = updateStatement.toSql();
 
-    return this.rawUpdate(commandText, updateStatement.parameters.map((e) => e.value).toList());
+    return this.rawUpdate(commandText, updateStatement._parameters.map((e) => e.value).toList());
   }
 
   Future<int> executeDelete(DeleteStatement deleteStatement) {
@@ -66,7 +64,7 @@ abstract class DbContext {
 
     var commandText = deleteStatement.toSql();
 
-    return this.rawDelete(commandText, deleteStatement.parameters.map((p) => p.value).toList());
+    return this.rawDelete(commandText, deleteStatement._parameters.map((p) => p.value).toList());
   }
 
   Future<int> executeInsert(InsertStatement insertStatement) {
@@ -74,7 +72,7 @@ abstract class DbContext {
 
     var commandText = insertStatement.toSql();
 
-    return this.rawInsert(commandText, insertStatement.parameters.map((p) => p.value).toList());
+    return this.rawInsert(commandText, insertStatement._parameters.map((p) => p.value).toList());
   }
 
   /// <summary>
@@ -85,7 +83,7 @@ abstract class DbContext {
 
     var commandText = selectStatement.toSql();
 
-    var result = await this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList());
+    var result = await this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
 
     if (result.isEmpty) return null;
 
@@ -97,7 +95,7 @@ abstract class DbContext {
 
     var commandText = selectStatement.toSql();
 
-    return this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList());
+    return this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
   }
 
   Future<Object?> executeScalar(SelectStatement selectStatement) async {
@@ -105,7 +103,7 @@ abstract class DbContext {
 
     var commandText = selectStatement.toSql();
 
-    var queryResult = await this.rawQuery(commandText, selectStatement.parameters.map((p) => p.value).toList());
+    var queryResult = await this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
 
     return this.getScalarValue(queryResult);
   }

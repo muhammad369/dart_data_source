@@ -1,17 +1,16 @@
-import 'dart:core';
 
-import '../../dart_data_source.dart';
+part of datasource_core;
 
-enum select_comp_op { union, unionAll, intersect, except }
+enum _SelectCompOp { union, unionAll, intersect, except }
 
 class CompoundSelect extends AbsSelect {
   late AbsSelect _select1, _select2;
-  late select_comp_op _op;
+  late _SelectCompOp _op;
 
   static List<String> _ops = <String>[]
     ..addAll(["UNION", "UNION ALL", "INTERSECT", "EXCEPT"]);
 
-  CompoundSelect(select_comp_op op, AbsSelect select1, AbsSelect select2) {
+  CompoundSelect(_SelectCompOp op, AbsSelect select1, AbsSelect select2) {
     this._select1 = select1;
     this._select2 = select2;
     this._op = op;

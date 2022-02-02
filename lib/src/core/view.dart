@@ -1,6 +1,4 @@
-import 'dart:core';
-
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class View extends DbTable {
   late AbsSelect _select;

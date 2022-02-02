@@ -1,6 +1,4 @@
-import 'dart:core';
-
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class SelectStatement extends AbsSelect implements Statement {
 //must be initialized
@@ -152,10 +150,10 @@ class SelectStatement extends AbsSelect implements Statement {
 
 //#region Statement interface
 
-  List<NameValuePair> parameters = <NameValuePair>[];
+  List<NameValuePair> _parameters = <NameValuePair>[];
 
-  void addParam(String name, Object value) {
-    parameters.add(new NameValuePair(name, value));
+  void _addParam(String name, Object value) {
+    _parameters.add(new NameValuePair(name, value));
   }
 
 //#endregion

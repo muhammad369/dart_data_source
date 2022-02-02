@@ -1,4 +1,4 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class Trigger extends DbObject {
   static List<String> _events = <String>[]

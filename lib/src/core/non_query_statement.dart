@@ -1,8 +1,8 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 abstract class NonQueryStatement extends Statement {
 
-  late Table tbl;
+  late final Table _tbl;
 
   Future<int> execute(DbContext dbc);
 
@@ -10,11 +10,11 @@ abstract class NonQueryStatement extends Statement {
 
 //#region Statement interface
 
-  List<NameValuePair> parameters = <NameValuePair>[];
+  List<NameValuePair> _parameters = <NameValuePair>[];
 
   @override
-  void addParam(String name, Object value) {
-    parameters.add(new NameValuePair(name, value));
+  void _addParam(String name, Object value) {
+    _parameters.add(new NameValuePair(name, value));
   }
 
 //#endregion

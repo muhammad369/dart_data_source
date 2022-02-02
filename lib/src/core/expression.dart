@@ -1,5 +1,4 @@
-import 'dart:core';
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 abstract class Expr {
   dbType fieldType = dbType.String;
@@ -326,15 +325,15 @@ class NullCheckExp extends Expr {
 }
 
 class ExistsExpression extends Expr {
-  late AbsSelect select;
+  late AbsSelect _select;
 
   ExistsExpression(AbsSelect select) {
-    this.select = select;
+    this._select = select;
   }
 
   @override
   String toSql(Statement? st) {
-    return "EXISTS (${select.sqlInSelect()})";
+    return "EXISTS (${_select.sqlInSelect()})";
   }
 }
 
@@ -360,7 +359,7 @@ class ValueExpr extends Expr {
   @override
   String toSql(Statement? st) {
     if (name != null && st != null) {
-      st.addParam(name!, val!);
+      st._addParam(name!, val!);
       return "?";
       //return "@${name}";
     }

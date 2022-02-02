@@ -1,10 +1,10 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class InsertStatement extends NonQueryStatement {
   late List<Assignment> _assigns;
 
   InsertStatement(Table tbl) {
-    this.tbl = tbl;
+    this._tbl = tbl;
   }
 
   InsertStatement Values(List<Assignment> assigns) {
@@ -20,7 +20,7 @@ class InsertStatement extends NonQueryStatement {
   @override
   String toSql() {
     StringBuffer sb = new StringBuffer();
-    sb.write("INSERT INTO `${tbl.name}` ( ");
+    sb.write("INSERT INTO `${_tbl.name}` ( ");
     //fields
     for (Assignment asn in _assigns) {
       sb.write("`${asn._clnName}` ,");

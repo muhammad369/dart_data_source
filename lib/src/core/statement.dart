@@ -1,8 +1,10 @@
+part of datasource_core;
+
 /// <summary>
 /// Any statement must have parameterized slots
 /// </summary>
 abstract class Statement {
-  void addParam(String name, Object value);
+  void _addParam(String name, Object value);
 }
 
 class NameValuePair {

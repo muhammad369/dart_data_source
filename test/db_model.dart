@@ -1,14 +1,12 @@
 
-import 'package:dart_data_source/src/core/column.dart';
-import 'package:dart_data_source/src/core/database.dart';
-import 'package:dart_data_source/src/core/database_model.dart';
-import 'package:dart_data_source/src/core/table.dart';
+
+import 'package:dart_data_source/dart_data_source.dart';
 
 class DbModel extends DatabaseModel{
 
   late Table itemsTable;
 
-  late Column itemName;
+  late DbColumn itemName;
 
   late TextColumn itemDescription;
 
@@ -30,7 +28,7 @@ class DbModel extends DatabaseModel{
 
   @override
   void defineSchemaUpdates(Database db) {
-    db.addSchemaUpdateObjects([itemsTable]);
+    db.addSchemaUpdate(SchemaUpdate(objects: [itemsTable]));
   }
   
 }

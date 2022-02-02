@@ -1,3 +1,5 @@
+part of datasource_core;
+
 extension StringBufferExt on String {
   String removeLastChar() {
     return this.substring(0, this.length - 1);

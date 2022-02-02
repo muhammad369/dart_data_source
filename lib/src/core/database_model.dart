@@ -1,5 +1,4 @@
-
-import 'package:dart_data_source/dart_data_source.dart';
+part of datasource_core;
 
 abstract class DatabaseModel{
   final Database db;

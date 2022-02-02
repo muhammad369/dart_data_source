@@ -1,3 +1,5 @@
+part of datasource_core;
+
 /// <summary>
 /// objects that may be populated to the db
 /// such as Table, view, field, trigger, ....

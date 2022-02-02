@@ -1,17 +1,15 @@
-import 'dart:core';
-
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class Table extends DbTable {
   late List<DbColumn> fields;
-  late List<_ForeinKey> FKs;
+  late List<_ForeignKey> FKs;
 
 
   IntColumn get Id {
     return fields[0] as IntColumn;
   }
 
-  int newId(DbContext dbc) {
+  int nextId(DbContext dbc) {
     Object? tmp = db
         .Select()
         .Fields([
@@ -24,7 +22,7 @@ class Table extends DbTable {
 
   Table(String name, Database database, List<DbColumn> fields) {
     this.fields = <DbColumn>[];
-    this.FKs = <_ForeinKey>[];
+    this.FKs = <_ForeignKey>[];
     //
     this.name = name;
     this.db = database;
@@ -32,7 +30,7 @@ class Table extends DbTable {
     this.fields.addAll(fields);
 
     for (DbColumn f in fields) {
-      f.setTable(this);
+      f._setTable(this);
     }
   }
 
@@ -49,7 +47,7 @@ class Table extends DbTable {
 
     this.fields.add(tmp);
 
-    this.FKs.add(new _ForeinKey(tmp, table));
+    this.FKs.add(new _ForeignKey(tmp, table));
 
     return tmp;
   }
@@ -63,7 +61,7 @@ class Table extends DbTable {
       sb.write("${col.columnDefinition()} ,");
     }
     //forein keys
-    for (_ForeinKey fk in this.FKs) {
+    for (_ForeignKey fk in this.FKs) {
       sb.write("FOREIGN KEY (`${fk._coln.name}`) REFERENCES `${fk._tbl.name}` ON DELETE CASCADE,");
     }
     //primary key
@@ -84,11 +82,11 @@ class Table extends DbTable {
   }
 }
 
-class _ForeinKey {
+class _ForeignKey {
   late DbColumn _coln;
   late Table _tbl;
 
-  _ForeinKey(DbColumn coln, Table tbl) {
+  _ForeignKey(DbColumn coln, Table tbl) {
     this._coln = coln;
     this._tbl = tbl;
   }

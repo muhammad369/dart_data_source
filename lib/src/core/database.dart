@@ -1,6 +1,4 @@
-import 'dart:core';
-
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 abstract class Database {
   Database();
@@ -147,9 +145,9 @@ abstract class Database {
     _schemaUpdates.add(su);
   }
 
-  void addSchemaUpdateObjects(List<DbObject> dbObjs) {
-    _schemaUpdates.add(new SchemaUpdate(objects: dbObjs));
-  }
+  // void addSchemaUpdateObjects(List<DbObject> dbObjs) {
+  //   _schemaUpdates.add(new SchemaUpdate(objects: dbObjs));
+  // }
 
   Future<void> _setSchemaVersion(DbContext dbc, int version) async {
     await this

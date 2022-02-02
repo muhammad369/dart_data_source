@@ -1,5 +1,5 @@
-import 'dart:core';
-import '../../dart_data_source.dart';
+
+part of datasource_core;
 
 abstract class DbColumn extends Expr implements DbObject {
   late Table _table;
@@ -40,7 +40,7 @@ abstract class DbColumn extends Expr implements DbObject {
     return type;
   }
 
-  void setTable(Table table) {
+  void _setTable(Table table) {
     this._table = table;
   }
 
@@ -98,7 +98,7 @@ abstract class DbColumn extends Expr implements DbObject {
 //#region column-children
 
 abstract class IntColumn extends DbColumn {
-  bool autoInc = false;
+  bool _autoInc = false;
   IntColumn(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
     fieldType = dbType.Int;
@@ -109,13 +109,13 @@ abstract class IntColumn extends DbColumn {
   }
 
   IntColumn setAutoIncrement(bool autoInc) {
-    this.autoInc = autoInc;
+    this._autoInc = autoInc;
     return this;
   }
 
   @override
   String _getType() {
-    if (autoInc) {
+    if (_autoInc) {
       return super._getType() + " AUTO_INCREMENT";
     } else {
       return super._getType();

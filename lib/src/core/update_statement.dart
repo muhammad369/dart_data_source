@@ -1,11 +1,11 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class UpdateStatement extends NonQueryStatement {
   late List<Assignment> _assigns;
   Expr? _cond;
 
   UpdateStatement(Table tbl) {
-    this.tbl = tbl;
+    this._tbl = tbl;
   }
 
   UpdateStatement Set(List<Assignment> assignments) {
@@ -23,7 +23,7 @@ class UpdateStatement extends NonQueryStatement {
   @override
   String toSql() {
     StringBuffer sb = new StringBuffer();
-    sb.write("UPDATE `${this.tbl.name}` SET ");
+    sb.write("UPDATE `${this._tbl.name}` SET ");
 
     sb.writeAll(_assigns.map((a) => a.toSql(this)), " , ");
 

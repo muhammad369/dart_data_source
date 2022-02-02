@@ -1,4 +1,4 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class Index extends DbObject {
   late Table _tbl;

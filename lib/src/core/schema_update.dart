@@ -1,4 +1,4 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class SchemaUpdate {
   late List<DbObject> _objects;
@@ -36,17 +36,5 @@ class SchemaUpdate {
     }
   }
   
-  // SchemaUpdate addObjects(List<DbObject> dbo) {
-  //   for (DbObject item in dbo) {
-  //     _objects.add(item);
-  //   }
-  //   return this;
-  // }
-  //
-  // SchemaUpdate addStatements(List<NonQueryStatement> st) {
-  //   for (NonQueryStatement item in st) {
-  //     _statements.add(item);
-  //   }
-  //   return this;
-  // }
+
 }

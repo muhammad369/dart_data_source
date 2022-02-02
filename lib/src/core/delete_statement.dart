@@ -1,10 +1,10 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 class DeleteStatement extends NonQueryStatement {
   Expr? _cond;
 
   DeleteStatement(Table tbl) {
-    this.tbl = tbl;
+    this._tbl = tbl;
   }
 
   DeleteStatement Where(Expr cond) {
@@ -20,7 +20,7 @@ class DeleteStatement extends NonQueryStatement {
   @override
   String toSql() {
     StringBuffer sb = new StringBuffer();
-    sb.write("DELETE FROM `${tbl.name}`");
+    sb.write("DELETE FROM `${_tbl.name}`");
     if (_cond != null) {
       sb.write(" WHERE (${_cond!.toSql(this)})");
     }

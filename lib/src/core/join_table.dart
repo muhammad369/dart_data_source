@@ -1,4 +1,4 @@
-import '../../dart_data_source.dart';
+part of datasource_core;
 
 enum JoinType { inner, left, right, full, cross }
 
@@ -15,7 +15,7 @@ class JoinTable extends Queryable {
     return "(${_tbl1.sqlInSelect()}) ${_joinNames[_join.index]} JOIN (${_tbl2.sqlInSelect()}) ON (${_on.toSql(null)})";
   }
 
-  JoinTable(Queryable t1, JoinType j, Queryable t2, Expr on) {
+  JoinTable._(Queryable t1, JoinType j, Queryable t2, Expr on) {
     this._tbl1 = t1;
     this._tbl2 = t2;
     this._join = j;
