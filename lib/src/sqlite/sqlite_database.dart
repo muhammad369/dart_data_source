@@ -7,14 +7,13 @@ class SqliteDatabase extends Database {
 
   @override
   Future<DbContext> newContext() async {
-    var sdfDb = await sqf.openDatabase(_path);
+    var sdfDb = await sqf.openDatabase(_path, onConfigure: (d) async {await d.execute('PRAGMA foreign_keys = ON;');});
     return SqliteDbContext(sdfDb);
   }
 
   @override
-  void addIdColumn(Table t) {
-    // TODO: add another kind of id (uuid, or no id at all)
-    t.fields.add(new SqliteInteger("id_${t.name}"));
+  DbColumn createIdColumn(String name) {
+    return new SqliteInteger(name);
   }
 
   @override

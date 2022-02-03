@@ -19,12 +19,12 @@ class View extends DbTable {
   }
 
   @override
-  String sqlInSelect() {
+  String _sqlInSelect() {
     return name;
   }
 
   @override
   String createCommand() {
-    return "CREATE VIEW `${this.name}` AS  ${this._select.sqlInSelect()}";
+    return "CREATE VIEW `${this.name}` AS  ${this._select._sqlInSelect()}";
   }
 }

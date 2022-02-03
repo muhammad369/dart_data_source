@@ -14,38 +14,37 @@ abstract class Expr {
     if (o is Expr) {
       return new BinaryExpression(this, "=", o)..fieldType = dbType.Bool;
     }
-    return Equal(new ValueExpr(o)..fieldType = dbType.Bool);
+    return Equal(new ValueExpr(o, this.fieldType));
   }
 
   Expr NotEqual(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "<>", o)..fieldType = dbType.Bool;
     }
-    return NotEqual(new ValueExpr(o)..fieldType = dbType.Bool);
+    return NotEqual(new ValueExpr(o, this.fieldType));
   }
 
   Expr Concat(Object o) {
     if (o is Expr) {
       return new BinaryExpression(this, "||", o)..fieldType = dbType.String;
     }
-    return Concat(new ValueExpr(o)..fieldType = dbType.String);
+    return Concat(new ValueExpr(o, this.fieldType));
   }
 
   Expr Subtract(Expr o) {
-      return new BinaryExpression(this, "-", o)..fieldType = this.fieldType;
+    return new BinaryExpression(this, "-", o)..fieldType = this.fieldType;
   }
-  
-  Expr SubtractValue(num value){
-    return this.Subtract(new ValueExpr(value)..fieldType = this.fieldType);
+
+  Expr SubtractValue(num value) {
+    return this.Subtract(new ValueExpr(value, this.fieldType));
   }
-  
 
   Expr Plus(Expr exp) {
     return new BinaryExpression(this, "+", exp)..fieldType = this.fieldType;
   }
 
   Expr PlusValue(num value) {
-    return Plus(new ValueExpr(value)..fieldType = this.fieldType);
+    return Plus(new ValueExpr(value, this.fieldType));
   }
 
   Expr Mod(Expr exp) {
@@ -53,7 +52,7 @@ abstract class Expr {
   }
 
   Expr ModValue(num value) {
-    return Mod(new ValueExpr(value)..fieldType = dbType.Int);
+    return Mod(new ValueExpr(value, dbType.Double));
   }
 
   Expr Multiply(Expr exp) {
@@ -61,7 +60,7 @@ abstract class Expr {
   }
 
   Expr MultiplyValue(double o) {
-    return Multiply(new ValueExpr(o)..fieldType = dbType.Double);
+    return Multiply(new ValueExpr(o, dbType.Double));
   }
 
   Expr Divide(Expr exp) {
@@ -69,7 +68,7 @@ abstract class Expr {
   }
 
   Expr DivideValue(double o) {
-    return Divide(new ValueExpr(o)..fieldType = dbType.Double);
+    return Divide(new ValueExpr(o, dbType.Double));
   }
 
   Expr And(Expr exp) {
@@ -80,20 +79,32 @@ abstract class Expr {
     return new BinaryExpression(this, "OR", exp)..fieldType = dbType.Bool;
   }
 
-  Expr GreaterThan(Expr exp) {
-    return new BinaryExpression(this, ">", exp)..fieldType = dbType.Bool;
+  Expr GreaterThan(Object o) {
+    if(o is Expr){
+      return new BinaryExpression(this, ">", o)..fieldType = dbType.Bool;
+    }
+    return GreaterThan(ValueExpr(o, dbType.Double));
   }
 
-  Expr GreaterOrEqual(Expr exp) {
-    return new BinaryExpression(this, ">=", exp)..fieldType = dbType.Bool;
+  Expr GreaterOrEqual(Object o) {
+    if(o is Expr){
+      return new BinaryExpression(this, ">=", o)..fieldType = dbType.Bool;
+    }
+    return GreaterOrEqual(ValueExpr(o, dbType.Double));
   }
 
-  Expr LessThan(Expr exp) {
-    return new BinaryExpression(this, "<", exp)..fieldType = dbType.Bool;
+  Expr LessThan(Object o) {
+    if(o is Expr){
+      return new BinaryExpression(this, "<", o)..fieldType = dbType.Bool;
+    }
+    return LessThan(ValueExpr(o, dbType.Double));
   }
 
-  Expr LessOrEqual(Expr exp) {
-    return new BinaryExpression(this, "<=", exp)..fieldType = dbType.Bool;
+  Expr LessOrEqual(Object o) {
+    if(o is Expr){
+      return new BinaryExpression(this, "<=", o)..fieldType = dbType.Bool;
+    }
+    return LessOrEqual(ValueExpr(o, dbType.Double));
   }
 
   Expr InValues(List<Object> values) {
@@ -109,8 +120,7 @@ abstract class Expr {
   }
 
   Expr NotIn(AbsSelect select) {
-    return new InExpression.Select(this, false, select)
-      ..fieldType = dbType.Bool;
+    return new InExpression.Select(this, false, select)..fieldType = dbType.Bool;
   }
 
   Expr InTable(DbTable table) {
@@ -122,25 +132,19 @@ abstract class Expr {
   }
 
   Expr Between(Expr exp1, Expr exp2) {
-    return new BetweenExpression(this, true, exp1, exp2)
-      ..fieldType = dbType.Bool;
+    return new BetweenExpression(this, true, exp1, exp2)..fieldType = dbType.Bool;
   }
 
   Expr NotBetween(Expr exp1, Expr exp2) {
-    return new BetweenExpression(this, false, exp1, exp2)
-      ..fieldType = dbType.Bool;
+    return new BetweenExpression(this, false, exp1, exp2)..fieldType = dbType.Bool;
   }
 
   Expr BetweenValues(Object val1, Object val2) {
-    return new BetweenExpression(
-        this, true, new ValueExpr(val1), new ValueExpr(val2))
-      ..fieldType = dbType.Bool;
+    return new BetweenExpression(this, true, new ValueExpr(val1, dbType.Double), new ValueExpr(val2, dbType.Double));
   }
 
   Expr NotBetweenValues(Object val1, Object val2) {
-    return new BetweenExpression(
-        this, false, new ValueExpr(val1), new ValueExpr(val2))
-      ..fieldType = dbType.Bool;
+    return new BetweenExpression(this, false, new ValueExpr(val1, dbType.Double), new ValueExpr(val2, dbType.Double));
   }
 
   Expr IsNull() {
@@ -156,11 +160,11 @@ abstract class Expr {
   /// and _ to match exactly one char, you can use it with text or numeric columns
   /// </summary>
   Expr Like(String pattern) {
-    return new BinaryExpression(this, "LIKE", new ValueExpr(pattern));
+    return new BinaryExpression(this, "LIKE", new ValueExpr(pattern, dbType.String));
   }
 
   Expr NotLike(String pattern) {
-    return new BinaryExpression(this, "NOT LIKE", new ValueExpr(pattern));
+    return new BinaryExpression(this, "NOT LIKE", new ValueExpr(pattern, dbType.String));
   }
 
   //#endregion
@@ -232,11 +236,11 @@ abstract class Expr {
 
   //order by
 
-  SortExp Asc() {
+  SortExp Ascending() {
     return new SortExp(this);
   }
 
-  SortExp Desc() {
+  SortExp Descending() {
     return new SortExp(this, true);
   }
 }
@@ -252,7 +256,7 @@ class BinaryExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "(${_exp1.toSql(st)} ${_op} ${_exp2.toSql(st)}) ";
+    return "(${_exp1.toSql(st)}) ${_op} (${_exp2.toSql(st)}) ";
   }
 }
 
@@ -264,7 +268,7 @@ class UnaryExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "(${_op} ${_exp.toSql(st)}) ";
+    return "${_op} (${_exp.toSql(st)}) ";
   }
 }
 
@@ -280,8 +284,7 @@ class FunctionExpression extends Expr {
     sb.write(_function);
     sb.write("( ");
     //
-    if(_exp_list == null || _exp_list!.length == 0)
-      return sb.toString() + ") ";
+    if (_exp_list == null || _exp_list!.length == 0) return sb.toString() + ") ";
     //
     for (Expr exp in _exp_list!) {
       sb.write("${exp.toSql(st)}${" ,"}");
@@ -301,6 +304,7 @@ class BetweenExpression extends Expr {
     this._exp1 = exp1;
     this._exp2 = exp2;
     this._between = betweenOrNot;
+    this.fieldType = dbType.Bool;
   }
 
   @override
@@ -333,7 +337,7 @@ class ExistsExpression extends Expr {
 
   @override
   String toSql(Statement? st) {
-    return "EXISTS (${_select.sqlInSelect()})";
+    return "EXISTS (${_select._sqlInSelect()})";
   }
 }
 
@@ -341,8 +345,9 @@ class ValueExpr extends Expr {
   Object? val = null;
   String? name = null;
 
-  ValueExpr(Object val) {
+  ValueExpr(Object val, dbType type) {
     this.val = val;
+    this.fieldType = type;
   }
 
   /// <summary>
@@ -358,20 +363,36 @@ class ValueExpr extends Expr {
   /// </summary>
   @override
   String toSql(Statement? st) {
-    if (name != null && st != null) {
-      st._addParam(name!, val!);
+    if (name != null && st != null && val != null) {
+      st._addParam(name!, val!.toString());
       return "?";
       //return "@${name}";
     }
     //
     if (val == null) {
       return "NULL";
-    } else if (val is String) {
+    } else if (val is String || val is DateTime) {
       return "'${val}'";
-    } else //double
+    } else //double, bool, int
     {
       return val.toString();
     }
+  }
+
+  String _valueString() {
+    if (val == null) {
+      return 'NULL';
+    }
+    //
+    if (this.fieldType == dbType.Date && this.val is DateTime) {
+      return (val! as DateTime).dateString();
+    }
+    //
+    if (fieldType == dbType.DateTime && val is DateTime) {
+      return (val! as DateTime).dateTimeString();
+    }
+    //
+    return val.toString();
   }
 }
 
@@ -386,7 +407,7 @@ class InExpression extends Expr {
   String valueInSql(Object? val) {
     if (val == null) {
       return "NULL";
-    } else if (val is String) {
+    } else if (val is String || val is DateTime) {
       return "'${val}'";
     } else //double
     {
@@ -417,8 +438,8 @@ class InExpression extends Expr {
     if (values != null) {
       StringBuffer sb = new StringBuffer();
       sb.write(_exp.toSql(st));
-      if (!_inOrNotIn) sb.write(" NOT ");
-      sb.write("BETWEEN ( ");
+      if (!_inOrNotIn) sb.write(" NOT");
+      sb.write(" IN ( ");
       for (Object val in values!) {
         sb.write("(${valueInSql(val)})${' ,'}");
       }
@@ -427,11 +448,11 @@ class InExpression extends Expr {
     }
     //======
     if (table != null) {
-      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${table!.sqlInSelect()})";
+      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${table!._sqlInSelect()})";
     }
     //======
     if (select != null) {
-      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${select.sqlInSelect()})";
+      return "((${_exp.toSql(st)}) ${_inOrNotIn ? "IN" : "NOT IN"} (${select._sqlInSelect()})";
     }
     //not supposed to come here
     return '';

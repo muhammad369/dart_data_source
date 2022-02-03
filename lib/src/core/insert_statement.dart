@@ -13,7 +13,7 @@ class InsertStatement extends NonQueryStatement {
   }
 
   InsertStatement ValuesMap(Map<String, dynamic> map) {
-    this._assigns = map.entries.map<Assignment>((item) => new Assignment(item.key, new ValueExpr(item.value))).toList();
+    this._assigns = map.entries.map<Assignment>((item) => new Assignment(item.key, new ValueExpr.Name(item.key, item.value))).toList();
     return this;
   }
 

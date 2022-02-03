@@ -90,12 +90,12 @@ abstract class DbContext {
     return result[0];
   }
 
-  Future<List<Map<String, dynamic>>> executeSelect(SelectStatement selectStatement) {
+  Future<List<Map<String, dynamic>>> executeSelect(AbsSelect selectStatement) {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
 
-    return this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
+    return this.rawQuery(commandText, selectStatement._getParameters().map((p) => p.value).toList());
   }
 
   Future<Object?> executeScalar(SelectStatement selectStatement) async {

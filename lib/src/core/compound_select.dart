@@ -17,17 +17,19 @@ class CompoundSelect extends AbsSelect {
   }
 
   @override
-  String sqlInSelect() {
-    return "(${_select1.sqlInSelect()}) ${_ops[_op.index]} ${_select2.sqlInSelect()}";
+  String _sqlInSelect() {
+    return "${_select1._sqlInSelect()} ${_ops[_op.index]} ${_select2._sqlInSelect()}";
   }
 
-  @override
-  Future<List<Map>> execute(DbContext dbc){
-    throw Exception('Not Implemented');
-  }
+
 
   @override
   List<FieldInfo> get fieldsInfo {
     return [..._select1.fieldsInfo, ..._select2.fieldsInfo];
+  }
+
+  @override
+  List<NameValuePair> _getParameters() {
+    return [..._select1._getParameters(), ..._select2._getParameters()];
   }
 }

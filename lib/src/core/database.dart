@@ -6,13 +6,20 @@ abstract class Database {
   Future<DbContext> newContext();
 
   /// <summary>
-  /// implemented by the db, pass columns except primary and forein keys
+  /// implemented by the db, pass columns except primary and foreign keys
   /// </summary>
   Table newTable(String name, List<DbColumn> fields);
 
   //#region execute commands
 
-  void addIdColumn(Table t);
+  DbColumn createIdColumn(String name);
+
+  void addIdColumn(Table t) {
+    // TODO: add another kind of id (uuid, or no id at all)
+    var col = createIdColumn('${t.name}PK');
+    t.fields.add(col);
+    col._setTable(t);
+  }
 
   //#endregion
 

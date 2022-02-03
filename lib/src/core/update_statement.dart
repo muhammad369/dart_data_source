@@ -13,6 +13,11 @@ class UpdateStatement extends NonQueryStatement {
     return this;
   }
 
+  UpdateStatement SetMap(Map<String, dynamic> map) {
+    this._assigns = map.entries.map<Assignment>((item) => new Assignment(item.key, new ValueExpr.Name(item.key, item.value))).toList();
+    return this;
+  }
+
   UpdateStatement Where(Expr cond) {
     this._cond = cond;
     return this;

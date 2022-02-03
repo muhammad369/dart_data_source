@@ -1,4 +1,3 @@
-
 part of datasource_core;
 
 abstract class DbColumn extends Expr implements DbObject {
@@ -13,7 +12,7 @@ abstract class DbColumn extends Expr implements DbObject {
     this.name = name;
     this._allowNull = allowNull;
     this._unique = unique;
-    if (defaultValue != null) this._defaultValue = new ValueExpr(defaultValue);
+    if (defaultValue != null) this._defaultValue = new ValueExpr(defaultValue, this.fieldType);
     //if (displayName != null) this.displayName = displayName;
   }
 

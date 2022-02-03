@@ -35,7 +35,7 @@ class Table extends DbTable {
   }
 
   @override
-  String sqlInSelect() {
+  String _sqlInSelect() {
     return name;
   }
 
@@ -48,7 +48,7 @@ class Table extends DbTable {
     this.fields.add(tmp);
 
     this.FKs.add(new _ForeignKey(tmp, table));
-
+    tmp._setTable(this);
     return tmp;
   }
 

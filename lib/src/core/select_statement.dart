@@ -9,8 +9,6 @@ class SelectStatement extends AbsSelect implements Statement {
   Expr? _cond;
   List<Expr>? _groupBys;
   Expr? _havingExp;
-  List<SortExp>? _sortList;
-  int _pageIndex = 0, _pageSize = 0;
 
   SelectStatement({bool distinct = false}) {
     this._distinct = distinct;
@@ -48,16 +46,6 @@ class SelectStatement extends AbsSelect implements Statement {
     return this;
   }
 
-  SelectStatement OrderBy(List<SortExp> sortExps) {
-    this._sortList = sortExps;
-    return this;
-  }
-
-  SelectStatement Page(int index, int pageSize) {
-    this._pageIndex = index;
-    this._pageSize = pageSize;
-    return this;
-  }
 
   SelectStatement GroupBy(List<Expr> exps) {
     this._groupBys = exps;
@@ -78,7 +66,7 @@ class SelectStatement extends AbsSelect implements Statement {
   /// the same as toSql(), but ignoring 'order by' and 'limit offset'
   /// </summary>
   @override
-  String sqlInSelect() {
+  String _sqlInSelect() {
     StringBuffer sb = new StringBuffer();
     sb.write('SELECT ${_distinct ? "DISTINCT" : ""}');
     //select all
@@ -95,7 +83,7 @@ class SelectStatement extends AbsSelect implements Statement {
     }
     //from
     if (_targetTable != null) {
-      sb.write(" FROM (${_targetTable!.sqlInSelect()}) ");
+      sb.write(" FROM (${_targetTable!._sqlInSelect()}) ");
     }
     //where
     if (_cond != null) {
@@ -116,35 +104,9 @@ class SelectStatement extends AbsSelect implements Statement {
     return sb.toString();
   }
 
-  String toSql() {
-    StringBuffer sb = new StringBuffer();
-    sb.write(this.sqlInSelect());
-    //order by
-    if (_sortList != null) {
-      sb.write(" ORDER BY ");
-
-      sb.writeAll(_sortList!.map((s) => s._toSql()), " , ");
-    }
-    //page
-    if (_pageSize > 0) {
-      sb.write(
-          " LIMIT ${_pageSize} OFFSET ${_pageSize * _pageIndex}");
-    }
-    //
-    return sb.toString();
-  }
-
 //#endregion
 
 //#region AbsSelect
-
-  /// <summary>
-  /// returns empty datatable for no data
-  /// </summary>
-  @override
-  Future<List<Map<String, dynamic>>> execute(DbContext dbc) {
-    return dbc.executeSelect(this);
-  }
 
 //#endregion
 
@@ -198,6 +160,30 @@ class SelectStatement extends AbsSelect implements Statement {
     }
     return [];
   }
+
+  @override
+  List<NameValuePair> _getParameters() {
+    return _parameters;
+  }
+
+  // compound
+  CompoundSelect Union(AbsSelect select) {
+    return new CompoundSelect(_SelectCompOp.union, this, select);
+  }
+
+  CompoundSelect UnionAll(AbsSelect select) {
+    return new CompoundSelect(_SelectCompOp.unionAll, this, select);
+  }
+
+  CompoundSelect Except(AbsSelect select) {
+    return new CompoundSelect(_SelectCompOp.except, this, select);
+  }
+
+  CompoundSelect Intersect(AbsSelect select) {
+    return new CompoundSelect(_SelectCompOp.intersect, this, select);
+  }
+
+
 }
 
 enum _SortOrder { ASC, DESC }

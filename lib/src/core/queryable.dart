@@ -4,7 +4,7 @@ part of datasource_core;
 /// a Queryable is any form may be used to select from such as (Table, View, JoinTable, SelectStatement)
 /// </summary>
 abstract class Queryable {
-  String sqlInSelect();
+  String _sqlInSelect();
 
   //#region join types
 
@@ -41,7 +41,7 @@ abstract class DbTable extends Queryable implements DbObject {
   late final Database db;
 
   @override
-  String sqlInSelect() {
+  String _sqlInSelect() {
     return "`${this.name}`";
   }
 

@@ -34,7 +34,7 @@ class DbModel extends DatabaseModel {
     gradesTable = db.newTable('Grades', [gradeName, studentsCount]);
 
     // student table
-    studentName = db.stringColumn('name', 200);
+    studentName = db.stringColumn('studentName', 200);
     studentDegree = db.intColumn('studentDegree', defaultValue: 0);
     studentJoinDate = db.dateColumn('studentJoinDate', allowNull: true);
 
@@ -49,7 +49,7 @@ class DbModel extends DatabaseModel {
 
     // view
     studentGradeView = db.newView("student_grade_vw",
-        SelectStatement().From(studentsTable.InnerJoin(gradesTable, studentGradeFk.Equal(gradesTable.Id))));
+        db.Select().From(studentsTable.InnerJoin(gradesTable, studentGradeFk.Equal(gradesTable.Id))));
   }
 
   @override

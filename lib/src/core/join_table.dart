@@ -11,8 +11,8 @@ class JoinTable extends Queryable {
     ..addAll(["INNER", "LEFT OUTER", "RIGHT OUTER", "FULL OUTER", "CROSS"]);
 
   @override
-  String sqlInSelect() {
-    return "(${_tbl1.sqlInSelect()}) ${_joinNames[_join.index]} JOIN (${_tbl2.sqlInSelect()}) ON (${_on.toSql(null)})";
+  String _sqlInSelect() {
+    return "(${_tbl1._sqlInSelect()}) ${_joinNames[_join.index]} JOIN (${_tbl2._sqlInSelect()}) ON (${_on.toSql(null)})";
   }
 
   JoinTable._(Queryable t1, JoinType j, Queryable t2, Expr on) {
