@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   dart_data_source:
     path: ../
+  path_provider: ^2.0.7
 
   cupertino_icons: ^1.0.2
 

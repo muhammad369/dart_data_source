@@ -176,6 +176,11 @@ class _MyHomePageState extends State<MyHomePage> {
     log('select from view => $q3');
     expect(2, q3.length);
 
+    var q4 = await db.Select().From(dbm.studentGradeView).Page(0, 2).execute(dbc);
+
+    log('select first 2 from view => $q3');
+    expect(2, q3.length);
+
     dbc.close();
   }
 
