@@ -17,7 +17,7 @@ class SqliteReal extends DoubleColumn {
 class SqliteString extends StringColumn {
   SqliteString(String name, int maxLength, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, maxLength, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
-    this.type = "TEXT";
+    this.type = "NVARCHAR($maxLength)";
   }
 }
 
@@ -31,7 +31,7 @@ class SqliteText extends TextColumn {
 class SqliteBool extends BoolColumn {
   SqliteBool(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
-    this.type = "INTEGER";
+    this.type = "BOOLEAN";
   }
 }
 
@@ -48,13 +48,13 @@ class SqliteBool extends BoolColumn {
 class SqliteDate extends DateColumn {
   SqliteDate(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
-    this.type = "TEXT";
+    this.type = "TIMESTAMP";
   }
 }
 
 class SqliteDateTime extends DateTimeColumn {
   SqliteDateTime(String name, {bool allowNull = false, bool unique = false, Object? defaultValue})
       : super(name, allowNull: allowNull, defaultValue: defaultValue, unique: unique) {
-    this.type = "TEXT";
+    this.type = "TIMESTAMP";
   }
 }

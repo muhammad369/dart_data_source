@@ -1,3 +1,7 @@
+<a href="https://pub.dev/packages/dart_data_source">
+   <img alt="Dart Pub" src="https://img.shields.io/pub/v/dart_data_source.svg?color=orange&style=flat-square" />
+</a>
+
 # dart_data_source
 
 A data access layer for dart on top of Sqflite
@@ -156,16 +160,25 @@ var dbc = await db.newContext();
     await dbc.executeTransaction((transactionContext) async {
       for (int i = 1; i <= 10; i++) {
         await db.InsertInto(dbm.studentsTable).ValuesMap({
-          'studentName': 'ahmed$i-1',
+          'studentName': 'student$i-grade1',
           'studentDegree': i * 10,
           'studentJoinDate': DateTime(2020, 1, i),
           'studentGradeFk': 1
         }).execute(transactionContext);
       }
-     
+
+      for (int i = 1; i <= 10; i++) {
+        await db.InsertInto(dbm.studentsTable).ValuesMap({
+          'studentName': 'student$i-grade2',
+          'studentDegree': i * 10,
+          'studentJoinDate': DateTime(2020, 1, i),
+          'studentGradeFk': 2
+        }).execute(transactionContext);
+      }
+
       await db.Update(dbm.gradesTable)
           .Set([dbm.studentsCount.Assign(dbm.studentsCount.PlusValue(10))])
-          .Where(dbm.gradesTable.Id.InValues([1, 2, 3]))
+          .Where(dbm.gradesTable.Id.InValues([1, 2]))
           .execute(transactionContext);
     });
 ```
