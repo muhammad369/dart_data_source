@@ -107,7 +107,7 @@ abstract class IntColumn extends DbColumn {
     return new Assignment(this.name, new ValueExpr.Name(this.name, v));
   }
 
-  IntColumn setAutoIncrement(bool autoInc) {
+  IntColumn _setAutoIncrement(bool autoInc) {
     this._autoInc = autoInc;
     return this;
   }

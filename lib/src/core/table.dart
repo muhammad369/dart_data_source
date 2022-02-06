@@ -4,14 +4,12 @@ class Table extends DbTable {
   late List<DbColumn> fields;
   late List<_ForeignKey> FKs;
 
-
   IntColumn get Id {
     return fields[0] as IntColumn;
   }
 
   int nextId(DbContext dbc) {
-    Object? tmp = db
-        .Select()
+    Object? tmp = db.Select()
         .Fields([
           Expr.Max([this.Id])
         ])
@@ -42,12 +40,16 @@ class Table extends DbTable {
   /// <summary>
   /// adds a new fk to the table and adds the field to fields list, specifying it's name in the db
   /// </summary>
-  IntColumn addFKto(Table table, String name) {
-    IntColumn tmp = db.intColumn(name);
+  IntColumn addFKto(Table table, String name,
+      {bool allowNull = false,
+      bool unique = false,
+      IntegrityRule onUpdate = IntegrityRule.noAction,
+      IntegrityRule onDelete = IntegrityRule.noAction}) {
+    IntColumn tmp = db.intColumn(name, allowNull: allowNull, unique: unique);
 
     this.fields.add(tmp);
 
-    this.FKs.add(new _ForeignKey(tmp, table));
+    this.FKs.add(new _ForeignKey(tmp, table, onUpdate: onUpdate, onDelete: onDelete));
     tmp._setTable(this);
     return tmp;
   }
@@ -62,13 +64,29 @@ class Table extends DbTable {
     }
     //forein keys
     for (_ForeignKey fk in this.FKs) {
-      sb.write("FOREIGN KEY (`${fk._coln.name}`) REFERENCES `${fk._tbl.name}` ON DELETE CASCADE,");
+      sb.write(
+          "FOREIGN KEY (`${fk._coln.name}`) REFERENCES `${fk._tbl.name}` ON UPDATE ${_integrityRuleText(fk._onUpdate)} ON DELETE ${_integrityRuleText(fk._onDelete)},");
     }
     //primary key
     sb.write("PRIMARY KEY (`${this.fields[0].name}`)");
     sb.write(" )");
     //
     return sb.toString();
+  }
+
+  String _integrityRuleText(IntegrityRule integrityRule) {
+    switch (integrityRule) {
+      case IntegrityRule.cascade:
+        return 'CASCADE';
+      case IntegrityRule.setNull:
+        return 'SET NULL';
+      case IntegrityRule.setDefault:
+        return 'SET DEFAULT';
+      case IntegrityRule.restrict:
+        return 'RESTRICT';
+      case IntegrityRule.noAction:
+        return 'NO ACTION';
+    }
   }
 
   @override
@@ -85,9 +103,16 @@ class Table extends DbTable {
 class _ForeignKey {
   late DbColumn _coln;
   late Table _tbl;
+  late IntegrityRule _onUpdate;
+  late IntegrityRule _onDelete;
 
-  _ForeignKey(DbColumn coln, Table tbl) {
+  _ForeignKey(DbColumn coln, Table tbl,
+      {IntegrityRule onUpdate = IntegrityRule.noAction, IntegrityRule onDelete = IntegrityRule.noAction}) {
     this._coln = coln;
     this._tbl = tbl;
+    this._onUpdate = onUpdate;
+    this._onDelete = onDelete;
   }
 }
+
+enum IntegrityRule { setNull, setDefault, cascade, restrict, noAction }
