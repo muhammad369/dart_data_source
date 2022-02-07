@@ -232,6 +232,10 @@ abstract class Expr {
     return new FunctionExpression("sum", exp)..fieldType = exp[0].fieldType;
   }
 
+  static Expr Raw(String rawSqlExpr){
+    return new RawSqlExpr(rawSqlExpr);
+  }
+
   //#endregion
 
   //order by
@@ -481,6 +485,19 @@ class AliasedExpr extends Expr {
   String toSql(Statement? st) {
     return "(${exp.toSql(st)}) AS ${_alias}";
   }
+}
+
+class RawSqlExpr extends Expr{
+
+  late String sql;
+
+  RawSqlExpr(this.sql);
+
+  @override
+  String toSql(Statement? st) {
+    return sql;
+  }
+
 }
 
 //#endregion
