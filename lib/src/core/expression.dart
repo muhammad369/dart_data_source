@@ -195,6 +195,14 @@ abstract class Expr {
     return new FunctionExpression("floor", [exp])..fieldType = dbType.Int;
   }
 
+  static Expr Date(Expr exp) {
+    return new FunctionExpression("date", [exp])..fieldType = dbType.Date;
+  }
+
+  static Expr Time(Expr exp) {
+    return new FunctionExpression("time", [exp])..fieldType = dbType.DateTime;
+  }
+
   /// <summary>
   /// the length of a String value
   /// </summary>
