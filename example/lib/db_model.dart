@@ -9,6 +9,7 @@ class DbModel extends DatabaseModel {
   // student
   late DbColumn studentName;
   late IntColumn studentDegree;
+  late BoolColumn studentSuccess;
   late Table studentsTable;
 
   late IntColumn studentGradeFk;
@@ -26,7 +27,6 @@ class DbModel extends DatabaseModel {
 
   @override
   void defineDatabaseObjects(Database db) {
-
     // Grade table
     gradeName = db.stringColumn('gradeName', 50);
     studentsCount = db.intColumn('studentsCount', defaultValue: 0);
@@ -37,8 +37,9 @@ class DbModel extends DatabaseModel {
     studentName = db.stringColumn('studentName', 200);
     studentDegree = db.intColumn('studentDegree', defaultValue: 0);
     studentJoinDate = db.dateColumn('studentJoinDate', allowNull: true);
+    studentSuccess = db.boolColumn('studentSuccess', allowNull: true, defaultValue: true);
 
-    studentsTable = db.newTable("Students", [studentName, studentDegree, studentJoinDate]);
+    studentsTable = db.newTable("Students", [studentName, studentDegree, studentJoinDate, studentSuccess]);
 
     // fk
     studentGradeFk = studentsTable.addFKto(gradesTable, "studentGradeFk");

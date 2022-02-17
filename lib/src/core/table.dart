@@ -43,8 +43,8 @@ class Table extends DbTable {
   IntColumn addFKto(Table table, String name,
       {bool allowNull = false,
       bool unique = false,
-      IntegrityRule onUpdate = IntegrityRule.noAction,
-      IntegrityRule onDelete = IntegrityRule.noAction}) {
+      IntegrityRule onUpdate = IntegrityRule.cascade,
+      IntegrityRule onDelete = IntegrityRule.cascade}) {
     IntColumn tmp = db.intColumn(name, allowNull: allowNull, unique: unique);
 
     this.fields.add(tmp);

@@ -376,36 +376,41 @@ class ValueExpr extends Expr {
   @override
   String toSql(Statement? st) {
     if (name != null && st != null && val != null) {
-      st._addParam(name!, val!.toString());
+      st._addParam(name!, (val! is DateTime || val! is String) ? val!.toString() : val!);
       return "?";
       //return "@${name}";
     }
     //
     if (val == null) {
       return "NULL";
-    } else if (val is String || val is DateTime) {
+    }
+    else if (val is String || val is DateTime) {
       return "'${val}'";
-    } else //double, bool, int
+    }
+    // else if(val is bool){
+    //   return (val as bool) ? '1' : '0';
+    // }
+    else // num, bool
     {
       return val.toString();
     }
   }
 
-  String _valueString() {
-    if (val == null) {
-      return 'NULL';
-    }
-    //
-    if (this.fieldType == dbType.Date && this.val is DateTime) {
-      return (val! as DateTime).dateString();
-    }
-    //
-    if (fieldType == dbType.DateTime && val is DateTime) {
-      return (val! as DateTime).dateTimeString();
-    }
-    //
-    return val.toString();
-  }
+  // String _valueString() {
+  //   if (val == null) {
+  //     return 'NULL';
+  //   }
+  //   //
+  //   if (this.fieldType == dbType.Date && this.val is DateTime) {
+  //     return (val! as DateTime).dateString();
+  //   }
+  //   //
+  //   if (fieldType == dbType.DateTime && val is DateTime) {
+  //     return (val! as DateTime).dateTimeString();
+  //   }
+  //   //
+  //   return val.toString();
+  // }
 }
 
 class InExpression extends Expr {
@@ -421,7 +426,11 @@ class InExpression extends Expr {
       return "NULL";
     } else if (val is String || val is DateTime) {
       return "'${val}'";
-    } else //double
+    }
+    // else if(val is bool){
+    //   return val ? '1' : '0';
+    // }
+    else // num, bool
     {
       return val.toString();
     }

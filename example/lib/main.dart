@@ -105,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           'studentName': 'ahmed$i-1',
           'studentDegree': i * 10,
           'studentJoinDate': DateTime(2020, 1, i),
+          'studentSuccess': false,
           'studentGradeFk': 1
         }).execute(transactionContext);
       }
@@ -114,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           'studentName': 'ahmed$i-2',
           'studentDegree': i * 10,
           'studentJoinDate': DateTime(2020, 1, i),
+          'studentSuccess': 1, // int value for bool
           'studentGradeFk': 2
         }).execute(transactionContext);
       }
@@ -178,8 +180,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var q4 = await db.Select().From(dbm.studentGradeView).Page(0, 2).execute(dbc);
 
-    log('select first 2 from view => $q3');
-    expect(2, q3.length);
+    log('select first 2 from view => $q4');
+    expect(2, q4.length);
+
+    var q5 = await db.Select().From(dbm.studentGradeView).Where(dbm.studentSuccess.Equal(true)).Page(0, 2).execute(dbc);
+
+    log('select by bool field, first 2 from view => $q5');
+    expect(2, q5.length);
 
     dbc.close();
   }
