@@ -122,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //
       for (int i = 1; i <= 10; i++) {
         db.InsertInto(dbm.studentsTable).ValuesMap({
+          'test': null, // this field shall be ignored
           'studentName': 'ahmed$i-3',
           'studentDegree': i * 10,
           'studentJoinDate': DateTime(2020, 1, i),

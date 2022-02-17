@@ -246,6 +246,11 @@ abstract class Expr {
 
   //#endregion
 
+  // valueExpr
+
+  // TODO: add a dbType of null
+  static ValueExpr get NULL => ValueExpr(null, dbType.Text);
+
   //order by
 
   SortExp Ascending() {
@@ -255,6 +260,7 @@ abstract class Expr {
   SortExp Descending() {
     return new SortExp(this, true);
   }
+
 }
 
 //#region subclasses
@@ -357,7 +363,7 @@ class ValueExpr extends Expr {
   Object? val = null;
   String? name = null;
 
-  ValueExpr(Object val, dbType type) {
+  ValueExpr(Object? val, dbType type) {
     this.val = val;
     this.fieldType = type;
   }
@@ -365,7 +371,7 @@ class ValueExpr extends Expr {
   /// <summary>
   /// use this constructor for parametrized query
   /// </summary>
-  ValueExpr.Name(String name, Object val) {
+  ValueExpr.Name(String name, Object? val) {
     this.name = name;
     this.val = val;
   }

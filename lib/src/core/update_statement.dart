@@ -13,8 +13,12 @@ class UpdateStatement extends NonQueryStatement {
     return this;
   }
 
+  /// don't use this method to set null, because map entries with value of null will be ignored
   UpdateStatement SetMap(Map<String, dynamic> map) {
-    this._assigns = map.entries.map<Assignment>((item) => new Assignment(item.key, new ValueExpr.Name(item.key, item.value))).toList();
+    this._assigns = map.entries
+        .where((item) => item.value != null)
+        .map<Assignment>((item) => new Assignment(item.key, new ValueExpr.Name(item.key, item.value)))
+        .toList();
     return this;
   }
 
