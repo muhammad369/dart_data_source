@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var dbm = new DbModel(db);
 
-    var dbc = await db.newContext();
+    var dbc = await db.newContext()..setLogger(resultLogger: (log)=> print(log), sqlLogger: (log)=> print(log));
 
     // new schema
     await dbm.init(dbc);
