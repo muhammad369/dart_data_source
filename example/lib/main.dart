@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var gradeCount = await db.Select()
         .Fields([
-          Expr.Count([dbm.gradesTable.Id])
+          Expr.Count(dbm.gradesTable.Id)
         ])
         .From(dbm.gradesTable)
         .executeScalar(dbc);

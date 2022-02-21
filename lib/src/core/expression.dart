@@ -187,13 +187,13 @@ abstract class Expr {
     return new FunctionExpression("Abs", [exp])..fieldType = exp.fieldType;
   }
 
-  static Expr Ceiling(Expr exp) {
-    return new FunctionExpression("ceiling", [exp])..fieldType = dbType.Int;
-  }
-
-  static Expr Floor(Expr exp) {
-    return new FunctionExpression("floor", [exp])..fieldType = dbType.Int;
-  }
+  // static Expr Ceiling(Expr exp) {
+  //   return new FunctionExpression("ceiling", [exp])..fieldType = dbType.Int;
+  // }
+  //
+  // static Expr Floor(Expr exp) {
+  //   return new FunctionExpression("floor", [exp])..fieldType = dbType.Int;
+  // }
 
   static Expr Date(Expr exp) {
     return new FunctionExpression("date", [exp])..fieldType = dbType.Date;
@@ -241,24 +241,24 @@ abstract class Expr {
     return new FunctionExpression("min", exp)..fieldType = exp[0].fieldType;
   }
 
-  static Expr Avg(List<Expr> exp) {
-    return new FunctionExpression("avg", exp)..fieldType = exp[0].fieldType;
+  static Expr Avg(Expr exp) {
+    return new FunctionExpression("avg", [exp])..fieldType = exp.fieldType;
   }
 
-  static Expr Count(List<Expr> exp) {
-    return new FunctionExpression("count", exp)..fieldType = dbType.Int;
+  static Expr Count(Expr exp) {
+    return new FunctionExpression("count", [exp])..fieldType = dbType.Int;
   }
 
-  static Expr Median(List<Expr> exp) {
-    return new FunctionExpression("median", exp)..fieldType = exp[0].fieldType;
+  // static Expr Median(Expr exp) {
+  //   return new FunctionExpression("median", [exp])..fieldType = exp.fieldType;
+  // }
+
+  static Expr Sum(Expr exp) {
+    return new FunctionExpression("sum", [exp])..fieldType = exp.fieldType;
   }
 
-  static Expr Sum(List<Expr> exp) {
-    return new FunctionExpression("sum", exp)..fieldType = exp[0].fieldType;
-  }
-
-  static Expr Total(List<Expr> exp) {
-    return new FunctionExpression("total", exp)..fieldType = exp[0].fieldType;
+  static Expr Total(Expr exp) {
+    return new FunctionExpression("total", [exp])..fieldType = exp.fieldType;
   }
 
   static Expr GroupConcat(Expr exp, [String? seperator]) {
