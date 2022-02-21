@@ -80,28 +80,28 @@ abstract class Expr {
   }
 
   Expr GreaterThan(Object o) {
-    if(o is Expr){
+    if (o is Expr) {
       return new BinaryExpression(this, ">", o)..fieldType = dbType.Bool;
     }
     return GreaterThan(ValueExpr(o, dbType.Double));
   }
 
   Expr GreaterOrEqual(Object o) {
-    if(o is Expr){
+    if (o is Expr) {
       return new BinaryExpression(this, ">=", o)..fieldType = dbType.Bool;
     }
     return GreaterOrEqual(ValueExpr(o, dbType.Double));
   }
 
   Expr LessThan(Object o) {
-    if(o is Expr){
+    if (o is Expr) {
       return new BinaryExpression(this, "<", o)..fieldType = dbType.Bool;
     }
     return LessThan(ValueExpr(o, dbType.Double));
   }
 
   Expr LessOrEqual(Object o) {
-    if(o is Expr){
+    if (o is Expr) {
       return new BinaryExpression(this, "<=", o)..fieldType = dbType.Bool;
     }
     return LessOrEqual(ValueExpr(o, dbType.Double));
@@ -203,6 +203,23 @@ abstract class Expr {
     return new FunctionExpression("time", [exp])..fieldType = dbType.DateTime;
   }
 
+  /// formats the given date expr<br>
+  /// %f 	:	fractional seconds: SS.SSS <br>
+  /// %H 	:	hour: 00-24 <br>
+  /// %j 	:	day of year: 001-366 <br>
+  /// %J 	:	Julian day number <br>
+  /// %m 	:	month: 01-12 <br>
+  /// %M 	:	minute: 00-59 <br>
+  /// %s 	:	seconds since 1970-01-01 <br>
+  /// %S 	:	seconds: 00-59 <br>
+  /// %w 	:	day of week 0-6 with Sunday==0 <br>
+  /// %W 	:	week of year: 00-53 <br>
+  /// %Y 	:	year: 0000-9999 <br>
+  /// %% 	:	%
+  static Expr DateFormat(Expr exp, String format) {
+    return new FunctionExpression("strftime", [Expr.Raw(format), exp])..fieldType = dbType.String;
+  }
+
   /// <summary>
   /// the length of a String value
   /// </summary>
@@ -240,7 +257,16 @@ abstract class Expr {
     return new FunctionExpression("sum", exp)..fieldType = exp[0].fieldType;
   }
 
-  static Expr Raw(String rawSqlExpr){
+  static Expr Total(List<Expr> exp) {
+    return new FunctionExpression("total", exp)..fieldType = exp[0].fieldType;
+  }
+
+  static Expr GroupConcat(Expr exp, [String? seperator]) {
+    return new FunctionExpression("group_concat", seperator == null ? [exp] : [exp, Expr.Raw(seperator)])
+      ..fieldType = dbType.String;
+  }
+
+  static Expr Raw(String rawSqlExpr) {
     return new RawSqlExpr(rawSqlExpr);
   }
 
@@ -260,7 +286,6 @@ abstract class Expr {
   SortExp Descending() {
     return new SortExp(this, true);
   }
-
 }
 
 //#region subclasses
@@ -389,8 +414,7 @@ class ValueExpr extends Expr {
     //
     if (val == null) {
       return "NULL";
-    }
-    else if (val is String || val is DateTime) {
+    } else if (val is String || val is DateTime) {
       return "'${val}'";
     }
     // else if(val is bool){
@@ -510,8 +534,7 @@ class AliasedExpr extends Expr {
   }
 }
 
-class RawSqlExpr extends Expr{
-
+class RawSqlExpr extends Expr {
   late String sql;
 
   RawSqlExpr(this.sql);
@@ -520,7 +543,6 @@ class RawSqlExpr extends Expr{
   String toSql(Statement? st) {
     return sql;
   }
-
 }
 
 //#endregion
