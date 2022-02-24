@@ -204,6 +204,7 @@ abstract class Expr {
   }
 
   /// formats the given date expr<br>
+  /// %d 	:	day of month: 00
   /// %f 	:	fractional seconds: SS.SSS <br>
   /// %H 	:	hour: 00-24 <br>
   /// %j 	:	day of year: 001-366 <br>
@@ -217,7 +218,7 @@ abstract class Expr {
   /// %Y 	:	year: 0000-9999 <br>
   /// %% 	:	%
   static Expr DateFormat(Expr exp, String format) {
-    return new FunctionExpression("strftime", [Expr.Raw(format), exp])..fieldType = dbType.String;
+    return new FunctionExpression("strftime", [Expr.Raw("'$format'"), exp])..fieldType = dbType.String;
   }
 
   /// <summary>

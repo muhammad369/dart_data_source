@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dart_data_source/dart_data_source.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -68,7 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var dbm = new DbModel(db);
 
-    var dbc = await db.newContext()..setLogger(resultLogger: (log)=> print(log), sqlLogger: (log)=> print(log));
+    var dbc = await db.newContext()
+      ..setLogger(resultLogger: (log) => print(log), sqlLogger: (log) => print(log));
 
     // new schema
     await dbm.init(dbc);
@@ -85,12 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await dbc.rawInsert("insert into Grades (gradeName, studentsCount) values ('Grade3', 0)");
 
-    var gradeCount = await db.Select()
-        .Fields([
-          Expr.Count(dbm.gradesTable.Id)
-        ])
-        .From(dbm.gradesTable)
-        .executeScalar(dbc);
+    var gradeCount =
+        await db.Select().Fields([Expr.Count(dbm.gradesTable.Id)]).From(dbm.gradesTable).executeScalar(dbc);
 
     log('grades count => $gradeCount');
     expect(gradeCount, 3);
@@ -188,6 +187,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     log('select by bool field, first 2 from view => $q5');
     expect(2, q5.length);
+
+    var q6 = await db.Select()
+        .From(dbm.studentsTable)
+        .Where(Expr.DateFormat(dbm.studentJoinDate, '%d').Equal('01'))
+        .execute(dbc);
+
+    log('using date format query => $q6');
+    expect(2, q6.length);
 
     dbc.close();
   }
