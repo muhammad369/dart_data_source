@@ -50,9 +50,7 @@ abstract class DbContext {
   // }
 
   Future<void> create(DbObject obj) {
-    var cmd = obj.createCommand();
-    if(sqlLogger != null) sqlLogger!(cmd);
-    return this.executeSql(cmd);
+    return this.executeSql(obj.createCommand());
   }
 
   //#endregion
@@ -65,27 +63,24 @@ abstract class DbContext {
     //startTransaction();
 
     var commandText = updateStatement.toSql();
-    var params = updateStatement._parameters.map((e) => e.value).toList();
-    if(sqlLogger != null) sqlLogger!('statement: $commandText  params: $params');
-    return this.rawUpdate(commandText, params);
+
+    return this.rawUpdate(commandText, updateStatement._parameters.map((e) => e.value).toList());
   }
 
   Future<int> executeDelete(DeleteStatement deleteStatement) {
     //startTransaction();
 
     var commandText = deleteStatement.toSql();
-    var params = deleteStatement._parameters.map((p) => p.value).toList();
-    if(sqlLogger != null) sqlLogger!('statement: $commandText  params: $params');
-    return this.rawDelete(commandText, params);
+
+    return this.rawDelete(commandText, deleteStatement._parameters.map((p) => p.value).toList());
   }
 
   Future<int> executeInsert(InsertStatement insertStatement) {
     //startTransaction();
 
     var commandText = insertStatement.toSql();
-    var params = insertStatement._parameters.map((p) => p.value).toList();
-    if(sqlLogger != null) sqlLogger!('statement: $commandText  params: $params');
-    return this.rawInsert(commandText, params);
+
+    return this.rawInsert(commandText, insertStatement._parameters.map((p) => p.value).toList());
   }
 
   /// <summary>
@@ -95,36 +90,30 @@ abstract class DbContext {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
-    var params = selectStatement._parameters.map((p) => p.value).toList();
-    if(sqlLogger != null) sqlLogger!('statement: $commandText  params: $params');
-    var result = await this.rawQuery(commandText, params);
 
-    if(resultLogger != null) resultLogger!('sql select row result: $result');
+    var result = await this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
+
     if (result.isEmpty) return null;
 
     return result[0];
   }
 
-  Future<List<Map<String, dynamic>>> executeSelect(AbsSelect selectStatement) async {
+  Future<List<Map<String, dynamic>>> executeSelect(AbsSelect selectStatement) {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
-    var params = selectStatement._getParameters().map((p) => p.value).toList();
-    if(sqlLogger != null) sqlLogger!('statement: $commandText  params: $params');
-    var result = await this.rawQuery(commandText, params);
-    if(resultLogger != null) resultLogger!('sql result: $result');
-    return result;
+
+    return this.rawQuery(commandText, selectStatement._getParameters().map((p) => p.value).toList());
   }
 
   Future<Object?> executeScalar(SelectStatement selectStatement) async {
     //startTransaction();
 
     var commandText = selectStatement.toSql();
-    var params = selectStatement._parameters.map((p) => p.value).toList();
-    if(sqlLogger != null) sqlLogger!('select scalar statement: $commandText  params: $params');
-    var result = await this.rawQuery(commandText, params);
-    if(resultLogger != null) resultLogger!('sql result: $result');
-    return this.getScalarValue(result);
+
+    var queryResult = await this.rawQuery(commandText, selectStatement._parameters.map((p) => p.value).toList());
+
+    return this.getScalarValue(queryResult);
   }
 
 //#endregion
