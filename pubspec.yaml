@@ -1,6 +1,6 @@
 name: dart_data_source
 description: A layer on top of Sqflite
-version: 0.2.0
+version: 0.4.0
 homepage: https://github.com/muhammad369/dart_data_source
 
 environment:

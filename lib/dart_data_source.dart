@@ -14,3 +14,5 @@ export 'src/sqlite/inmemory_database.dart';
 
 export 'src/entity/base_entity.dart';
 export 'src/entity/extensions.dart';
+export 'src/entity/base_query_repository.dart';
+export 'src/entity/base_repository.dart';

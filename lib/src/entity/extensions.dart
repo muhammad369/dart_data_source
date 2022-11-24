@@ -1,5 +1,4 @@
 import 'package:dart_data_source/dart_data_source.dart';
-import 'package:dart_data_source/src/entity/base_entity.dart';
 
 extension entityExtensions on AbsSelect {
   Future<List<E>> executeEntityList<E extends BaseEntity>(E Function() entityCreator, DbContext dbc) async {
@@ -9,7 +8,7 @@ extension entityExtensions on AbsSelect {
 }
 
 extension entityExtensions1 on SelectStatement {
-  Future<E?> executeEntityList<E extends BaseEntity>(E entity, DbContext dbc) async {
+  Future<E?> executeEntity<E extends BaseEntity>(E entity, DbContext dbc) async {
     var result = await executeRow(dbc);
     return result == null ? null : entity?..fromMap(result!);
   }
