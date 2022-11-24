@@ -38,7 +38,7 @@ abstract class Queryable {
 /// </summary>
 abstract class DbTable extends Queryable implements DbObject {
   late final String name;
-  late final Database db;
+  late final AbsDatabase db;
 
   @override
   String _sqlInSelect() {

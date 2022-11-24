@@ -5,14 +5,19 @@ import 'package:dart_data_source/dart_data_source.dart';
 import 'db_model.dart';
 
 void main() async {
-  var db = new InMemoryDatabase();
-  var dbm = new DbModel(db);
 
-  await dbm.init();
+  test('inMemory db creation and schema update', () async{
+    var db = new InMemoryDatabase();
+    var dbm = new DbModel(db);
+    var dbc = await db.newTestingContext();
 
-  var dbc = await db.newContext();
-  var version = await db.currentVersion(dbc);
-  expect(version, 1);
+    await dbm.init(dbc);
 
-  dbc.close();
+    var version = await db.currentVersion(dbc);
+    expect(version, 1);
+
+    dbc.close();
+  });
+
+
 }

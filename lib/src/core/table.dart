@@ -18,7 +18,7 @@ class Table extends DbTable {
     return tmp == null ? 1 : (tmp as int) + 1;
   }
 
-  Table(String name, Database database, List<DbColumn> fields) {
+  Table(String name, AbsDatabase database, List<DbColumn> fields) {
     this.fields = <DbColumn>[];
     this.FKs = <_ForeignKey>[];
     //

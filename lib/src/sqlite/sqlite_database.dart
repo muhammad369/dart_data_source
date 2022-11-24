@@ -1,14 +1,27 @@
-import '../../dart_data_source.dart';
-import 'package:sqflite/sqflite.dart' as sqf;
 
-class SqliteDatabase extends Database {
+import 'dart:io';
+import '../../dart_data_source.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+class SqliteDatabase extends AbsDatabase {
   String _path;
   SqliteDatabase(this._path);
 
   @override
   Future<DbContext> newContext() async {
-    var sdfDb = await sqf.openDatabase(_path, onConfigure: (d) async {await d.execute('PRAGMA foreign_keys = ON;');});
-    return SqliteDbContext(sdfDb);
+    late DatabaseExecutor sqfDb;
+    var onConfig = (d) async {
+      await d.execute('PRAGMA foreign_keys = ON;');
+    };
+
+    if(Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
+      sqfDb = await openDatabase(_path, onConfigure: onConfig);
+    }
+    else {
+      sqfDb = await databaseFactoryFfi.openDatabase(_path, options: OpenDatabaseOptions(onConfigure: onConfig));
+    }
+    return SqliteDbContext(sqfDb);
   }
 
   @override

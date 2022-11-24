@@ -1,7 +1,7 @@
 part of datasource_core;
 
 abstract class DatabaseModel{
-  final Database db;
+  final AbsDatabase db;
 
   DatabaseModel(this.db);
 
@@ -17,7 +17,7 @@ abstract class DatabaseModel{
   }
 
   // abstract
-  void defineDatabaseObjects(Database db);
+  void defineDatabaseObjects(AbsDatabase db);
 
-  void defineSchemaUpdates(Database db);
+  void defineSchemaUpdates(AbsDatabase db);
 }

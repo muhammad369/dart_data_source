@@ -11,10 +11,10 @@ class DbModel extends DatabaseModel{
   late TextColumn itemDescription;
 
 
-  DbModel(Database db) : super(db);
+  DbModel(AbsDatabase db) : super(db);
 
   @override
-  void defineDatabaseObjects(Database db) {
+  void defineDatabaseObjects(AbsDatabase db) {
 
     // items table
     itemName = db.textColumn("name");
@@ -27,7 +27,7 @@ class DbModel extends DatabaseModel{
   }
 
   @override
-  void defineSchemaUpdates(Database db) {
+  void defineSchemaUpdates(AbsDatabase db) {
     db.addSchemaUpdate(SchemaUpdate(objects: [itemsTable]));
   }
   

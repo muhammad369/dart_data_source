@@ -23,10 +23,10 @@ class DbModel extends DatabaseModel {
 
   late DateColumn studentJoinDate;
 
-  DbModel(Database db) : super(db);
+  DbModel(AbsDatabase db) : super(db);
 
   @override
-  void defineDatabaseObjects(Database db) {
+  void defineDatabaseObjects(AbsDatabase db) {
     // Grade table
     gradeName = db.stringColumn('gradeName', 50);
     studentsCount = db.intColumn('studentsCount', defaultValue: 0);
@@ -54,7 +54,7 @@ class DbModel extends DatabaseModel {
   }
 
   @override
-  void defineSchemaUpdates(Database db) {
+  void defineSchemaUpdates(AbsDatabase db) {
     db.addSchemaUpdate(SchemaUpdate(objects: [gradesTable, studentsTable]));
     //
     db.addSchemaUpdate(SchemaUpdate(objects: [studentJoinDate]));

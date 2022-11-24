@@ -1,5 +1,6 @@
 import '../../dart_data_source.dart';
 import 'package:sqflite/sqflite.dart' as sqf;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqf_ffi;
 
 class SqliteDbContext extends DbContext {
   // the connection

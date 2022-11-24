@@ -12,7 +12,7 @@ class View extends DbTable {
     return _select.fieldsInfo;
   }
 
-  View(Database db, String name, AbsSelect select) {
+  View(AbsDatabase db, String name, AbsSelect select) {
     this.db = db;
     this.name = name;
     this._select = select;

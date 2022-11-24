@@ -1,7 +1,7 @@
 part of datasource_core;
 
-abstract class Database {
-  Database();
+abstract class AbsDatabase {
+  AbsDatabase();
 
   Future<DbContext> newContext();
 
