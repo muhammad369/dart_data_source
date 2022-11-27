@@ -165,7 +165,7 @@ abstract class BoolColumn extends DbColumn {
   }
 
   Assignment AssignBool(bool v) {
-    return new Assignment(this.name, new ValueExpr.Name(this.name, v));
+    return new Assignment(this.name, new ValueExpr.Name(this.name, v? 1: 0));
   }
 }
 

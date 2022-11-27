@@ -5,15 +5,12 @@ abstract class DatabaseModel{
 
   DatabaseModel(this.db);
 
-  Future<void> init([DbContext? dbContext]) async {
+  Future<void> init(DbContext dbContext) async {
     defineDatabaseObjects(this.db);
     defineSchemaUpdates(this.db);
     //
-    var context = dbContext ?? await db.newContext();
-    await db.updateSchemaIfNeeded(context);
-    //
-    if (dbContext == null)
-      await context.close();
+    await db.updateSchemaIfNeeded(dbContext);
+
   }
 
   // abstract

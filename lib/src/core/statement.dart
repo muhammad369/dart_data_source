@@ -13,7 +13,7 @@ class NameValuePair {
 
   NameValuePair(String name, Object val) {
     this._name = name;
-    this._value = val;
+    this._value = val is bool ? (val ? 1 : 0) : val;
   }
 
   Object get value {

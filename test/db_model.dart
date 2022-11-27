@@ -1,34 +1,64 @@
-
-
 import 'package:dart_data_source/dart_data_source.dart';
 
-class DbModel extends DatabaseModel{
+class DbModel extends DatabaseModel {
+  // grade
+  late StringColumn gradeName;
+  late IntColumn studentsCount;
+  late Table gradesTable;
 
-  late Table itemsTable;
+  // student
+  late DbColumn studentName;
+  late IntColumn studentDegree;
+  late BoolColumn studentSuccess;
+  late Table studentsTable;
 
-  late DbColumn itemName;
+  late IntColumn studentGradeFk;
 
-  late TextColumn itemDescription;
+  // indices
+  late Index gradeNameIndex;
+  late Index studentNameIndex;
 
+  // view
+  late View studentGradeView;
+
+  late DateColumn studentJoinDate;
 
   DbModel(AbsDatabase db) : super(db);
 
   @override
   void defineDatabaseObjects(AbsDatabase db) {
+    // Grade table
+    gradeName = db.stringColumn('gradeName', 50);
+    studentsCount = db.intColumn('studentsCount', defaultValue: 0);
 
-    // items table
-    itemName = db.textColumn("name");
-    itemDescription = db.textColumn("description", allowNull: true);
+    gradesTable = db.newTable('Grades', [gradeName, studentsCount]);
 
-    itemsTable = db.newTable("Items", [itemName]);
+    // student table
+    studentName = db.stringColumn('studentName', 200);
+    studentDegree = db.intColumn('studentDegree', defaultValue: 0);
+    studentJoinDate = db.dateColumn('studentJoinDate', allowNull: true);
+    studentSuccess = db.boolColumn('studentSuccess', allowNull: true, defaultValue: true);
 
-    // child table
+    studentsTable = db.newTable("Students", [studentName, studentDegree, studentJoinDate, studentSuccess]);
 
+    // fk
+    studentGradeFk = studentsTable.addFKto(gradesTable, "studentGradeFk");
+
+    // indices
+    gradeNameIndex = db.newIndex('grade_name_idx', gradesTable, [gradeName], unique: true);
+    studentNameIndex = db.newIndex('student_name_idx', studentsTable, [studentName]);
+
+    // view
+    studentGradeView = db.newView("student_grade_vw",
+        db.Select().From(studentsTable.InnerJoin(gradesTable, studentGradeFk.Equal(gradesTable.Id))));
   }
 
   @override
   void defineSchemaUpdates(AbsDatabase db) {
-    db.addSchemaUpdate(SchemaUpdate(objects: [itemsTable]));
+    db.addSchemaUpdate(SchemaUpdate(objects: [gradesTable, studentsTable]));
+    //
+    db.addSchemaUpdate(SchemaUpdate(objects: [studentJoinDate]));
+    //
+    db.addSchemaUpdate(SchemaUpdate(objects: [gradeNameIndex, studentNameIndex, studentGradeView]));
   }
-  
 }

@@ -418,10 +418,10 @@ class ValueExpr extends Expr {
     } else if (val is String || val is DateTime) {
       return "'${val}'";
     }
-    // else if(val is bool){
-    //   return (val as bool) ? '1' : '0';
-    // }
-    else // num, bool
+    else if(val is bool){
+      return (val as bool) ? '1' : '0';
+    }
+    else // num
     {
       return val.toString();
     }
@@ -458,10 +458,10 @@ class InExpression extends Expr {
     } else if (val is String || val is DateTime) {
       return "'${val}'";
     }
-    // else if(val is bool){
-    //   return val ? '1' : '0';
-    // }
-    else // num, bool
+    else if(val is bool){
+      return val ? '1' : '0';
+    }
+    else // num
     {
       return val.toString();
     }
